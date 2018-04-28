@@ -23,14 +23,26 @@ class MessageServer : public MessageUnit {
  private:
   void AttachClient(std::shared_ptr<Socket> client);
   bool RegisterClient(std::shared_ptr<Socket> client);
-  void UnregisterClient(std::shared_ptr<Socket> client);
+  bool UnregisterClient(std::shared_ptr<Socket> client);
   void UnregisterClientImpl(std::shared_ptr<Socket> client);
-  void GetClientListQuery(std::shared_ptr<Socket> client);
-  void ExitChatQuery(std::shared_ptr<Socket> client);
-  void CreateChatQuery(std::shared_ptr<Socket> client);
-  void UpdateRequestsQuery(std::shared_ptr<Socket> client);
-  void SendMessageQuery(std::shared_ptr<Socket> client);
-  void UpdateMsgsQuery(std::shared_ptr<Socket> client);
+  
+  template<typename F>
+  bool TryActionOrDisconnect(std::shared_ptr<Socket> client, F action) {
+    try {
+      action();
+      return true;
+    } catch (const std::exception& e) {
+      UnregisterClientImpl(client);
+      return false;
+    }
+  }
+  
+  bool GetClientListQuery(std::shared_ptr<Socket> client);
+  bool ExitChatQuery(std::shared_ptr<Socket> client);
+  bool CreateChatQuery(std::shared_ptr<Socket> client);
+  bool UpdateRequestsQuery(std::shared_ptr<Socket> client);
+  bool SendMessageQuery(std::shared_ptr<Socket> client);
+  bool UpdateMsgsQuery(std::shared_ptr<Socket> client);
   std::shared_ptr<ServerSocket> server_socket_;
   std::mutex session_lock_;
   static size_t (* socket_hasher)(std::shared_ptr<Socket>);

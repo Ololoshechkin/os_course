@@ -44,7 +44,8 @@ bool MessageClient::StartChatWith(const std::string& name) {
   auto request = NewMessage<messages::CreateChat>();
   request.set_client_name(name);
   SendMessage(client_socket, request, MessageType::CREATE_CHAT);
-  auto in_chat = ReceiveMessageAndType<messages::CreateChatAcknolagement>(
+  auto type = ReceiveMessageType(client_socket);
+  auto in_chat = ReceiveMessage<messages::CreateChatAcknolagement>(
           client_socket).acknolaged();
   if (in_chat)
     state = IN_CHAT;
@@ -121,6 +122,9 @@ void MessageClient::UpdateChatRequest() {
                   [&names](const std::string& name) {
                     names.push_back(name);
                   });
+//    auto dbg = NewMessage<messages::ChosenPartner>();
+//    dbg.set_partner_name("a");
+//    SendMessage(client_socket, dbg, MessageType::CHOSEN_PARTNER);
     auto chosen_partner = on_chat_request(names);
     messages::ChosenPartner partner_msg;
     partner_msg.set_session_id(session_id);
@@ -184,5 +188,4 @@ bool MessageClient::TryRegister(const std::string& name) {
 }
 
 MessageClient::~MessageClient() = default;
-
 #pragma clang diagnostic pop

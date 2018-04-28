@@ -38,21 +38,22 @@ int main(int argc, char** args) {
         extra_string = "";
         print_header();
       };
-      bool any_chat_requests = false;
+      volatile bool any_chat_requests = false;
       std::function<
               std::string(const std::vector<std::string>& partner_names)
-      > on_chat_requests = [&any_chat_requests, &comand_promise, &extra_string,
-                            &print_header](
+      > on_chat_requests;
+      on_chat_requests = [&any_chat_requests, &comand_promise, &extra_string,
+                          &print_header](
               const std::vector<
                       std::string
               >& partner_names
       ) -> std::string {
+        any_chat_requests = true;
         std::cout << "chat requests : " << std::endl;
         for (const std::string& name : partner_names) {
           std::cout << name << std::endl;
         }
         std::cout << "choose partner : " << std::endl;
-        any_chat_requests = true;
         comand_promise = std::promise<std::string>();
         std::string chosen_name = comand_promise.get_future().get();
         if (std::find(partner_names.begin(), partner_names.end(),
@@ -77,7 +78,7 @@ int main(int argc, char** args) {
       while (true) {
         print_header();
         std::cin >> comand;
-        if (any_chat_requests) {
+        while (any_chat_requests) {
           comand_promise.set_value(comand);
           any_chat_requests = false;
           std::cin >> comand;
@@ -101,6 +102,7 @@ int main(int argc, char** args) {
           std::string name;
           std::cout << "enter user name to start chat with : ";
           std::cin >> name;
+          std::cout << "waiting for " << name << "\'s responce" << std::endl;
           if (client.StartChatWith(name)) {
             extra_string = "in chat with " + name;
           } else {
@@ -121,10 +123,10 @@ int main(int argc, char** args) {
             std::cout << "client not belong to any chat" << std::endl;
             continue;
           }
-          client.StopUpdates();
           std::string message;
           std::cout << ">>>>>>    ";
           std::cin >> message;
+          client.StopUpdates();
           if (!client.SendChatMessage(message)) {
             std::cout << "partner exited the current chat" << std::endl;
             extra_string = "";
@@ -144,7 +146,7 @@ int main(int argc, char** args) {
           client.Disconnect();
           break;
         } else {
-          std::cout << "unknown comand" << std::endl;
+          std::cout << "unknown comand \"" << comand << "\"" << std::endl;
         }
       }
       std::cout << "disconnected" << std::endl;
