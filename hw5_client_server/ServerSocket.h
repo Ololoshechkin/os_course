@@ -13,8 +13,8 @@ class Socket;
 
 class ServerSocket : public SocketBase {
  public:
-    explicit ServerSocket(InetSocketAddress const& address);
-    std::shared_ptr<Socket> accept();
+  explicit ServerSocket(InetSocketAddress const& address);
+  std::shared_ptr<Socket> accept();
 };
 
 #endif //HW5_CLIENT_SERVER_SERVERSOCKET_H

@@ -8,8 +8,7 @@
 #include <string>
 
 struct InetUtils {
-    static const std::string kLoopbackAddress;
-    static const int kDefaultBacklogSize;
+  static const std::string kLoopbackAddress;
+  static const int kDefaultBacklogSize;
 };
-
 #endif //HW5_CLIENT_SERVER_INETUTILS_H

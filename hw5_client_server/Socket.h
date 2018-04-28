@@ -17,16 +17,17 @@ class ByteWriteChanel;
 
 class Socket : public SocketBase, public std::enable_shared_from_this<Socket> {
  private:
-    explicit Socket(int socket_fd);
-    friend ServerSocket;
-    friend ByteReadChanel;
-    friend ByteWriteChanel;
+  explicit Socket(int socket_fd);
+  friend ServerSocket;
+  friend ByteReadChanel;
+  friend ByteWriteChanel;
  public:
-    explicit Socket();
-    explicit Socket(InetSocketAddress const& address);
-    std::string ReadPacket(size_t length);
-    void WriteBytes(const std::string& bytes);
-    int GetFd() const;
+  explicit Socket();
+  explicit Socket(InetSocketAddress const& address);
+  std::string ReadPacket(size_t length);
+  void WriteBytes(const std::string& bytes);
+  int GetFd() const;
+  ~Socket();
 };
 
 #endif //HW5_CLIENT_SERVER_SOCKET_H

@@ -9,15 +9,16 @@
 
 class SocketBase {
  protected:
-    int socket_fd;
-    SocketBase();
-    explicit SocketBase(int socket_fd);
-    virtual ~SocketBase();
+  int socket_fd;
+  SocketBase();
+  explicit SocketBase(int socket_fd);
+  virtual ~SocketBase();
  public:
-    virtual bool operator==(const SocketBase& other) const {
-        return socket_fd == other.socket_fd;
-    }
-    size_t Hash();
+  virtual bool operator==(const SocketBase& other) const {
+    return socket_fd == other.socket_fd;
+  }
+  
+  size_t Hash();
 };
 
 #endif //HW5_CLIENT_SERVER_SOCKETBASE_H

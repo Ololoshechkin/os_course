@@ -11,10 +11,10 @@
 
 SocketBase::SocketBase() :
         SocketBase(socket(AF_INET, SOCK_STREAM, 0)) {
-    if (socket_fd < 0) {
-        perror("failed to open server_socket_");
-        throw std::exception();
-    }
+  if (socket_fd < 0) {
+    perror("failed to open server_socket_");
+    throw std::exception();
+  }
 }
 
 SocketBase::SocketBase(int socket_fd) :
@@ -22,9 +22,9 @@ SocketBase::SocketBase(int socket_fd) :
 }
 
 SocketBase::~SocketBase() {
-    close(socket_fd);
+  close(socket_fd);
 }
 
 size_t SocketBase::Hash() {
-    return static_cast<size_t>(socket_fd);
+  return static_cast<size_t>(socket_fd);
 }
