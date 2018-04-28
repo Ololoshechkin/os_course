@@ -1,0 +1,68 @@
+syntax = "proto2";
+
+package messages;
+
+message GetListOfClients {
+    required int32 session_id = 1;
+}
+
+message ListOfClients {
+    required int32 session_id = 1;
+    repeated string client_names = 2;
+}
+
+message CreateChat {
+    required int32 session_id = 1;
+    required string client_name = 2;
+}
+
+message AcknolageCreatingChat {
+    required int32 session_id = 1;
+    required string creator_client_name = 2;
+}
+
+message CreateChatAcknolagement {
+    required int32 session_id = 1;
+    required bool acknolaged = 2;
+}
+
+message ExitChat {
+    required int32 session_id = 1;
+}
+
+message Message {
+    required int32 session_id = 1;
+    required string message_content = 2;
+}
+
+message KeepAliveChatRequest {
+    required int32 session_id = 1;
+}
+
+
+message KeepAliveChatAnswer {
+    required int32 session_id = 1;
+    required bool still_in_chat = 2;
+}
+
+message NoMessagesLeft {
+    required int32 session_id = 1;
+}
+
+message UpdateChatRequest {
+    required int32 session_id = 1;
+}
+
+message ChatRequests {
+    required int32 session_id = 1;
+    repeated string partner_names = 2;
+}
+
+message ChosenPartner {
+    required int32 session_id = 1;
+    optional string partner_name = 2;
+}
+
+message UpdateIncomingMessages {
+    required int32 session_id = 1;
+}

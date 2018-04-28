@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SERVER" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="server" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hw5_client_server" TARGET_NAME="hw5_client_server" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="hw5_client_server" RUN_TARGET_NAME="hw5_client_server">
+    <envs />
+    <method />
+  </configuration>
+</component>
