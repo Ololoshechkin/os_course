@@ -4,7 +4,12 @@
 
 #include <vector>
 #include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 #include <zconf.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include "ShellProcess.h"
 
 const int ShellProcess::kCallerProcessId = 0;
