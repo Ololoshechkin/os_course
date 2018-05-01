@@ -6,6 +6,15 @@
 #define HW5_CLIENT_SERVER_INETUTILS_H
 
 #include <string>
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 struct InetUtils {
   static const std::string kLoopbackAddress;

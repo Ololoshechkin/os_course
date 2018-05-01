@@ -14,6 +14,15 @@
 #include "MessageUnit.h"
 #include <memory.h>
 #include <thread>
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 class MessageServer : public MessageUnit {
  public:

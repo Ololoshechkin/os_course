@@ -4,6 +4,15 @@
 
 #include <iostream>
 #include "Socket.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 const size_t kBufSize = 1024;
 

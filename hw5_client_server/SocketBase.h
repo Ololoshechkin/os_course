@@ -6,6 +6,15 @@
 #define HW5_CLIENT_SERVER_SOCKETBASE_H
 
 #include <memory.h>
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 class SocketBase {
  protected:

@@ -4,6 +4,15 @@
 
 #include <sstream>
 #include "MessageUnit.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 size_t StringToInt(const std::string& s) {
   size_t int_val = 0;

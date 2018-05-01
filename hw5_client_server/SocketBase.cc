@@ -8,6 +8,15 @@
 #include <iostream>
 #include <zconf.h>
 #include "SocketBase.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 SocketBase::SocketBase() :
         SocketBase(socket(AF_INET, SOCK_STREAM, 0)) {

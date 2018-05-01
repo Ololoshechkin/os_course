@@ -8,6 +8,15 @@
 #include "SocketBase.h"
 #include "InetSocketAddress.h"
 #include "ServerSocket.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 class ServerSocket;
 

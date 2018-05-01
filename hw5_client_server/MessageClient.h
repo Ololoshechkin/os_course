@@ -11,6 +11,15 @@
 #include "MessageUnit.h"
 #include "session.pb.h"
 #include "message.pb.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 class MessageClient : public MessageUnit {
  public:

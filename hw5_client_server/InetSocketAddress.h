@@ -8,6 +8,15 @@
 #include <string>
 #include <netinet/in.h>
 #include "InetUtils.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 using SystemSocketAddress = struct sockaddr_in;
 

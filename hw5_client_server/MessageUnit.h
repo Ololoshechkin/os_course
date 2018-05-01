@@ -6,6 +6,15 @@
 
 #include <iostream>
 #include "Socket.h"
+#include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 size_t StringToInt(const std::string& s);
 std::string IntBytes(size_t length);

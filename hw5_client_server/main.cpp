@@ -3,6 +3,14 @@
 #include "MessageServer.h"
 #include "MessageClient.h"
 #include <future>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <algorithm>
 
 int main(int argc, char** args) {
   auto mode = std::string(args[1]);
