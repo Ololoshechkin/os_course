@@ -1,11 +1,5 @@
 # os_course
 
-## HW1
-custom shell
-
-## HW2
-grep utility
-
 ## HW5
 Simple terminal chat.
 usage :
@@ -29,3 +23,9 @@ NOTE-1: server is tolerant to ocasional client disconnections or corrupted messa
 NOTE-2: there still remains a way to send arbitrary sequence of bytes to server wich represents very long numbers (message lengths). It can be fixed after a while.
 
 TODO-plans: add cryptography in order to encrypt each message content. 
+
+## HW2
+grep utility
+
+## HW1
+custom shell
