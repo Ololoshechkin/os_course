@@ -25,3 +25,7 @@ client comands
    NOTE: update_messages is simmultaniously called by default each 500ms and all messages are being updated automatically. So, I don't recommend to use this comand. It was added just in case.
    * disconnect --- disconnects current client. If one is in chat --- exit_chat is called. After an execution of the comand all existing sockets are closed on both server and client side and server state contains no info of the client anymore.
    
+NOTE-1: server is tolerant to ocasional client disconnections or corrupted messages. A client is tolerant to ocasional partner disconnection (after detecting one it moves to default state and notifies the user about chat was closed), but client is not tolerant to server failures or corrupted messages received from the server.
+NOTE-2: there still remains a way to send arbitrary sequence of bytes to server wich represents very long numbers (message lengths). It can be fixed after a while.
+
+TODO-plans: add cryptography in order to encrypt each message content. 
