@@ -87,8 +87,8 @@ int main(int argc, char** args) {
         print_header();
         std::cin >> comand;
         while (any_chat_requests) {
-          comand_promise.set_value(comand);
           any_chat_requests = false;
+          comand_promise.set_value(comand);
           std::cin >> comand;
         }
         if (comand == "users") {
