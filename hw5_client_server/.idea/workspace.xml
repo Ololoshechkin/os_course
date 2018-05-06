@@ -65,8 +65,8 @@
       <file leaf-file-name="InetSocketAddress.cc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/InetSocketAddress.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+            <state relative-caret-position="120">
+              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
               <folding>
                 <element signature="e#42#64#0" expanded="true" />
               </folding>
@@ -231,7 +231,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -243,6 +242,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -308,11 +308,12 @@
       <workItem from="1525216876713" duration="1038000" />
       <workItem from="1525290234167" duration="3336000" />
       <workItem from="1525642028961" duration="116000" />
+      <workItem from="1525642202510" duration="14000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="120381000" />
+    <option name="totallyTimeSpent" value="120395000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -322,41 +323,41 @@
       <window_info anchor="bottom" id="TODO" order="5" />
       <window_info anchor="bottom" id="CMake" order="10" sideWeight="0.49563146" weight="0.32827586" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50436854" side_tool="true" weight="0.41379312" />
-      <window_info anchor="bottom" x="10" y="252" width="1259" height="296" id="Run" order="11" sideWeight="0.50277996" weight="0.24071527" />
+      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" x="10" y="252" width="1259" height="296" id="Run" order="11" sideWeight="0.50277996" weight="0.24071527" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49563146" visible="true" weight="0.41379312" />
-      <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" order="3" weight="0.32956383" />
-      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Messages" order="6" sideWeight="0.49722" weight="0.5972414" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
     </layout>
     <layout-to-restore>
+      <window_info anchor="bottom" id="CMake" order="10" sideWeight="0.49722" visible="true" weight="0.3287483" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2239873" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="5" />
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" x="10" y="252" width="1259" height="296" id="Run" order="11" sideWeight="0.50277996" weight="0.45529574" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
       <window_info anchor="right" x="0" y="0" width="270" height="600" id="Documentation" order="3" weight="0.32956383" />
-      <window_info anchor="bottom" id="Messages" order="6" sideWeight="0.49722" weight="0.51169187" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49722" weight="0.34112793" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50277996" side_tool="true" weight="0.4786795" />
-      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="CMake" order="10" sideWeight="0.49722" visible="true" weight="0.3287483" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Messages" order="6" sideWeight="0.49722" weight="0.51169187" />
       <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
@@ -372,6 +373,16 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/InetSocketAddress.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+          <folding>
+            <element signature="e#42#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/MessageClient.cc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
@@ -596,9 +607,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
-          <folding>
-            <element signature="e#42#65#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -680,13 +688,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/include/libnet.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/InetSocketAddress.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+        <state relative-caret-position="120">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="e#42#64#0" expanded="true" />
           </folding>

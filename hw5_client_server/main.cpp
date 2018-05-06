@@ -13,6 +13,10 @@
 #include <algorithm>
 
 int main(int argc, char** args) {
+  if (argc < 3) {
+  	std::cout << "please, run with 2 or 3 arguments : [\"server\" | \"client\"] , port, host?" << std::endl;
+  	return 0;
+  }
   auto mode = std::string(args[1]);
   int server_port = atoi(args[2]);
   auto server_host =
