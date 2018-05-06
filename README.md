@@ -28,11 +28,15 @@ TODO-plans: add cryptography in order to encrypt each message content.
 Jit
 
 supports:
-  * Cycle unrolling
-  supporting cycles :
-    * for (any varname = 0; any varname < any const; ++ any varname) {
-      // any body
-    }
+  * Cycle unrolling.
+  
+supporting cycles :
+  * for (any varname = 0; any varname < any const; ++ any varname) {
+  
+     // any body
+     
+  }
+  
 Jit maps code in runtime, finds All cycles in the given code and replaces them with their body repeated N times. Supports N in [0;222].
 
 ## HW2
