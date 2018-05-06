@@ -28,7 +28,8 @@ TODO-plans: add cryptography in order to encrypt each message content.
 Jit
 
 supports:
-  * Cycle unrolling
+  * Cycle unrolling.
+  
   supporting cycles :
     * for (any varname = 0; any varname < any const; ++ any varname) {
       // any body
