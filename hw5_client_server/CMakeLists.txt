@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(hw5_client_server)
+project(chat)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -16,7 +16,7 @@ add_custom_command(
 )
 
 add_executable(
-        hw5_client_server
+        chat
         main.cpp
         InetSocketAddress.cc InetSocketAddress.h
         ServerSocket.cc ServerSocket.h
@@ -30,4 +30,4 @@ add_executable(
         session.pb.cc session.pb.h
 )
 
-target_link_libraries(hw5_client_server protobuf)
+target_link_libraries(chat protobuf)
