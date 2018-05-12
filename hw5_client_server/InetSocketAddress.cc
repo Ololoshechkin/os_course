@@ -15,8 +15,8 @@
 #include <mutex>
 #include <algorithm>
 
-InetSocketAddress::InetSocketAddress(int port, std::string host) :
-        port(port), host(std::move(host)) {}
+InetSocketAddress::InetSocketAddress(int port, const std::string& host) :
+        port(port), host(host) {}
 
 SystemSocketAddress InetSocketAddress::ToSystemSocketAddress() const {
   SystemSocketAddress system_socket_address;

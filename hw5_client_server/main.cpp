@@ -23,7 +23,7 @@ int main(int argc, char** args) {
           argc >= 4 ? std::string(args[3]) : InetUtils::kLoopbackAddress;
   if (mode == "server") {
     try {
-      auto server = MessageServer(InetSocketAddress(server_port, server_host));
+      MessageServer server(InetSocketAddress(server_port, server_host));
       server.Run();
     } catch (...) {
     }
@@ -61,12 +61,12 @@ int main(int argc, char** args) {
               >& partner_names
       ) -> std::string {
         any_chat_requests = true;
+        comand_promise = std::promise<std::string>();
         std::cout << "chat requests : " << std::endl;
         for (const std::string& name : partner_names) {
           std::cout << name << std::endl;
         }
         std::cout << "choose partner : " << std::endl;
-        comand_promise = std::promise<std::string>();
         std::string chosen_name = comand_promise.get_future().get();
         if (std::find(partner_names.begin(), partner_names.end(),
                       chosen_name) != partner_names.end()) {
@@ -75,7 +75,7 @@ int main(int argc, char** args) {
         }
         return chosen_name;
       };
-      auto client = MessageClient(InetSocketAddress(server_port, server_host),
+      MessageClient client(InetSocketAddress(server_port, server_host),
                                   on_message, on_disconnect, on_chat_requests);
       while (true) {
         std::cout << "enter name : " << std::endl;

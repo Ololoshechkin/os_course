@@ -25,7 +25,7 @@ class InetSocketAddress {
     int port;
     std::string host;
     explicit InetSocketAddress(
-            int port, std::string host = InetUtils::kLoopbackAddress
+            int port, const std::string& host = InetUtils::kLoopbackAddress
     );
     SystemSocketAddress ToSystemSocketAddress() const;
 };

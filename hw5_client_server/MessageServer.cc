@@ -155,6 +155,7 @@ bool MessageServer::GetClientListQuery(std::shared_ptr<Socket> client) {
 
 bool MessageServer::ExitChatQuery(std::shared_ptr<Socket> client) {
   return TryActionOrDisconnect(client, [this, &client] {
+    chat_lock_.lock();
     debug_log(client, "exit chat");
     auto exit_chat = ReceiveMessage<messages::ExitChat>(client);
     auto partner = chat_partner_[client];
@@ -164,6 +165,7 @@ bool MessageServer::ExitChatQuery(std::shared_ptr<Socket> client) {
     debug_log(client, "exit chat, sending \"EXIT_CHAT\" to patner");
     SendMessage(partner, exit_chat, MessageType::EXIT_CHAT);
     debug_log(client, "exit chat, SENT");
+    chat_lock_.unlock();
   });
 }
 
@@ -222,15 +224,10 @@ bool MessageServer::UpdateRequestsQuery(std::shared_ptr<Socket> client) {
       return;
     }
     debug_log(client, "      non-empty");
-    auto type = ReceiveMessageType(client);
-    debug_log(client, "      type : ", type);
     // now, server skips all old UPDATE_CHAT_REQUEST-messages
-    while (type == MessageType::UPDATE_CHAT_REQUEST) {
-      ReceiveMessage<messages::UpdateChatRequest>(client);
-      type = ReceiveMessageType(client);
-    }
-    auto chosen_partner = ReceiveMessage<messages::ChosenPartner>(
-      client).partner_name();
+    auto type = ReceiveMessageType(client);
+    debug_log(client, " message type : ", type);
+    auto chosen_partner = ReceiveMessage<messages::ChosenPartner>(client).partner_name();
     debug_log(client, "      !chosen! : ", chosen_partner);
     for (const std::string& name : requester_names) {
       messages::CreateChatAcknolagement acknolagement;
@@ -243,6 +240,7 @@ bool MessageServer::UpdateRequestsQuery(std::shared_ptr<Socket> client) {
         chat_partner_[chat_partner_[client]] = client;
       }
     }
+    // chosen_partner_.erase(client);
     chat_requests_[client].clear();
     chat_lock_.unlock();
   });

@@ -25,11 +25,11 @@ class MessageClient : public MessageUnit {
  public:
   MessageClient(
           const InetSocketAddress&,
-          std::function<void(const messages::Message&)> on_message_receive,
-          std::function<void()> on_chat_disconnect,
-          std::function<
+          const std::function<void(const messages::Message&)>& on_message_receive,
+          const std::function<void()>& on_chat_disconnect,
+          const std::function<
                   std::string(const std::vector<std::string>&)
-          > on_chat_request
+          >& on_chat_request
   );
   bool TryRegister(const std::string& name);
   std::vector<std::string> GetUsers();

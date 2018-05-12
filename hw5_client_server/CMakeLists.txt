@@ -5,14 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_custom_command(
         OUTPUT message.pb.cc message.pb.h
-        COMMAND protoc --cpp_out=./ message.proto
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND protoc --cpp_out=${CMAKE_CURRENT_BINARY_DIR} message.proto
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_command(
         OUTPUT session.pb.cc session.pb.h
-        COMMAND protoc --cpp_out=./ session.proto
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND protoc --cpp_out=${CMAKE_CURRENT_BINARY_DIR} session.proto
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_executable(
@@ -30,4 +30,4 @@ add_executable(
         session.pb.cc session.pb.h
 )
 
-target_link_libraries(chat protobuf)
+target_link_libraries(chat protobuf pthread)

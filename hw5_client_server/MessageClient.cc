@@ -20,16 +20,16 @@
 
 MessageClient::MessageClient(
         const InetSocketAddress& server_address,
-        std::function<void(const messages::Message&)> on_message_receive,
-        std::function<void()> on_chat_disconnect,
-        std::function<
+        const std::function<void(const messages::Message&)>& on_message_receive,
+        const std::function<void()>& on_chat_disconnect,
+        const std::function<
                 std::string(const std::vector<std::string>&)
-        > on_chat_request
+        >& on_chat_request
 ) :
         client_socket(std::make_shared<Socket>(server_address)),
-        on_message_receive(std::move(on_message_receive)),
-        on_chat_disconnect(std::move(on_chat_disconnect)),
-        on_chat_request(std::move(on_chat_request)), state(AVAILABLE) {
+        on_message_receive(on_message_receive),
+        on_chat_disconnect(on_chat_disconnect),
+        on_chat_request(on_chat_request), state(AVAILABLE) {
 }
 
 //users
@@ -53,9 +53,12 @@ bool MessageClient::StartChatWith(const std::string& name) {
   auto request = NewMessage<messages::CreateChat>();
   request.set_client_name(name);
   SendMessage(client_socket, request, MessageType::CREATE_CHAT);
+  std::cout << "CREATE_CHAT - sent\n";
   auto type = ReceiveMessageType(client_socket);
+  std::cout << "TYPE : " << type << "\n";
   auto in_chat = ReceiveMessage<messages::CreateChatAcknolagement>(
           client_socket).acknolaged();
+  std::cout << "IN_CHAT : " << in_chat << "\n";
   if (in_chat)
     state = IN_CHAT;
   in_message_with_reply_lock_.unlock();
@@ -73,6 +76,7 @@ bool MessageClient::SendChatMessage(const std::string& message) {
 
 void MessageClient::UpdateMessages() {
   in_message_with_reply_lock_.lock();
+  std::cout << "UpdateMessages\n";
   SendMessage(client_socket, NewMessage<messages::UpdateIncomingMessages>(),
               MessageType::UPDATE_MSGS);
   bool have_more_messages = true;
@@ -116,10 +120,12 @@ void MessageClient::Disconnect() {
   SendMessage(client_socket, NewMessage<messages::Disconnect>(),
               MessageType::DISCONNECT);
   state = DISCONNECTED;
+  listening_thread.join();
 }
 
 void MessageClient::UpdateChatRequest() {
   in_message_with_reply_lock_.lock();
+  std::cout << "UpdateChatRequest\n";
   messages::UpdateChatRequest msg;
   msg.set_session_id(session_id);
   SendMessage(client_socket, msg, MessageType::UPDATE_CHAT_REQUEST);
@@ -176,14 +182,12 @@ bool MessageClient::TryRegister(const std::string& name) {
         try {
           UpdateMessages();
         } catch (const std::exception& e) {
-          update_lock_.unlock();
           std::terminate();
         }
       } else if (state == AVAILABLE) {
         try {
           UpdateChatRequest();
         } catch (const std::exception& e) {
-          update_lock_.unlock();
           std::terminate();
         }
       } else { // state == DISCONNECTED
