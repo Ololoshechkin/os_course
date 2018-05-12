@@ -18,27 +18,20 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
-size_t (* MessageServer::socket_hasher)(std::shared_ptr<Socket>) = [](
-      std::shared_ptr<Socket> socket
-) {
-  return socket->Hash();
-};
 
 template<typename T = std::string>
 void debug_log(
-  const std::shared_ptr<Socket>& socket,
+  const std::shared_ptr<Socket>& client_socket,
   const std::string& log,
   T extra = ""
 ) {
-  std::cerr << "      [" << socket->GetFd() << "] : " << log << " " << extra
+  std::cerr << "      [" << client_socket->GetFd() << "] : " << log << " " << extra
             << std::endl;
 }
 
 MessageServer::MessageServer(const InetSocketAddress& server_address) :
   server_socket_(std::make_shared<ServerSocket>(server_address)),
-  available_clients_(0, socket_hasher), chat_partner_(0, socket_hasher),
-  client_to_name(0, socket_hasher), chat_requests_(0, socket_hasher),
-  incoming_messages_(0, socket_hasher) {
+  first_free_session_(0) {
 }
 
 void MessageServer::Run() {
@@ -48,20 +41,51 @@ void MessageServer::Run() {
   }
 }
 
-void MessageServer::AttachClient(std::shared_ptr<Socket> client) {
+MessageServer::ClientView::ClientView(std::shared_ptr<Socket> client_socket,
+      int32_t session_id) :
+  client_socket(client_socket), session_id(session_id) {
+  }
+
+MessageServer::ClientView::ClientView(const MessageServer::ClientView& other) :
+  client_socket(other.client_socket), session_id(other.session_id) {
+}
+
+MessageServer::ClientView& MessageServer::ClientView::operator=(
+  MessageServer::ClientView other) {
+  Swap(other);
+  return *this;
+}
+
+void MessageServer::ClientView::Swap(MessageServer::ClientView& other) {
+  std::swap(client_socket, other.client_socket);
+  std::swap(session_id, other.session_id);
+}
+
+bool MessageServer::ClientView::operator==(const MessageServer::ClientView& other) const {
+  return session_id == other.session_id;
+}
+
+MessageServer::ClientView::operator std::shared_ptr<Socket>() {
+  return client_socket;
+}
+
+void MessageServer::AttachClient(std::shared_ptr<Socket> client_socket) {
   // TODO : use thread pool
   // TODO 2: no, it's only present in boost::
-  client_sockets.push_back(client);
-  client_threads.push_back(std::make_unique<std::thread>([this, client]() {
+  client_sockets.push_back(client_socket);
+  client_threads.push_back(std::make_unique<std::thread>([this, client_socket]() {
     std::cout << " starting client thread\n";
     std::cout << " registering client\n";
-    while (!RegisterClient(client)) {
-      debug_log(client, "failed to register");
+    int32_t session_id = -1;
+    while (session_id == -1) {
+      debug_log(client_socket, "register attempt...");
+      session_id = RegisterClient(client_socket);
     }
+    auto client = ClientView(client_socket, session_id);
     try {
       bool client_is_alive = true;
       while (client_is_alive) {
-        auto msg_type = ReceiveMessageType(client);
+        auto msg_type = ReceiveMessageType(client_socket);
         switch (msg_type) {
         case EXIT:
           client_is_alive = UnregisterClient(client);
@@ -70,11 +94,11 @@ void MessageServer::AttachClient(std::shared_ptr<Socket> client) {
           client_is_alive = ExitChatQuery(client);
           break;
         case GET_LIST_OF_CLIENTS:
-          debug_log(client, "GET_LIST_OF_CLIENTS");
+          debug_log(client_socket, "GET_LIST_OF_CLIENTS");
           client_is_alive = GetClientListQuery(client);
           break;
         case CREATE_CHAT:
-          debug_log(client, "creating chat");
+          debug_log(client_socket, "creating chat");
           client_is_alive = CreateChatQuery(client);
           break;
         case UPDATE_CHAT_REQUEST:
@@ -96,47 +120,49 @@ void MessageServer::AttachClient(std::shared_ptr<Socket> client) {
   }));
 }
 
-bool MessageServer::RegisterClient(std::shared_ptr<Socket> client) {
+int32_t MessageServer::RegisterClient(std::shared_ptr<Socket> client) {
+  int32_t result = -1;
   try {
-    bool successful = false;
     auto register_msg = ReceiveMessageAndType<messages::Register>(client);
     session_lock_.lock();
     messages::Session session;
-    if (name_to_client.count(register_msg.name())) {
+    if (name_to_client_.count(register_msg.name())) {
       session.set_session_id(-1);
     } else {
-      available_clients_[client] = register_msg;
-      name_to_client[register_msg.name()] = client;
-      client_to_name[client] = register_msg.name();
-      session.set_session_id(first_free_session_++);
-      successful = true;
+      auto client_session = first_free_session_++;
+      ClientView client_view(client, client_session);
+      available_clients_[client_view] = register_msg;
+      name_to_client_[register_msg.name()] = client_view;
+      client_to_name_[client_view] = register_msg.name();
+      session.set_session_id(client_session);
+      result = client_session;
     }
     session_lock_.unlock();
     SendMessage(client, session, MessageType::SESSION);
     debug_log(client, "\n\n\n\n\n");
-    return successful;
+    return result;
   } catch (const std::exception& e) {
-    return false;
+    return result;
   }
 }
 
-void MessageServer::UnregisterClientImpl(std::shared_ptr<Socket> client) {
+void MessageServer::UnregisterClientImpl(MessageServer::ClientView client) {
   if (chat_partner_.count(client)) {
     ExitChatQuery(client);
   }
-  name_to_client.erase(available_clients_[client].name());
-  client_to_name.erase(client);
+  name_to_client_.erase(available_clients_[client].name());
+  client_to_name_.erase(client);
   available_clients_.erase(client);
 }
 
-bool MessageServer::UnregisterClient(std::shared_ptr<Socket> client) {
+bool MessageServer::UnregisterClient(MessageServer::ClientView client_session) {
   session_lock_.lock();
-  UnregisterClientImpl(std::move(client));
+  UnregisterClientImpl(client_session);
   session_lock_.unlock();
   return false;
 }
 
-bool MessageServer::GetClientListQuery(std::shared_ptr<Socket> client) {
+bool MessageServer::GetClientListQuery(MessageServer::ClientView client) {
   return TryActionOrDisconnect(client, [this, &client] {
     auto session_id = ReceiveMessage<messages::GetListOfClients>(
       client).session_id();
@@ -153,23 +179,23 @@ bool MessageServer::GetClientListQuery(std::shared_ptr<Socket> client) {
   });
 }
 
-bool MessageServer::ExitChatQuery(std::shared_ptr<Socket> client) {
+bool MessageServer::ExitChatQuery(MessageServer::ClientView client) {
   return TryActionOrDisconnect(client, [this, &client] {
     chat_lock_.lock();
-    debug_log(client, "exit chat");
+    debug_log(client.client_socket, "exit chat");
     auto exit_chat = ReceiveMessage<messages::ExitChat>(client);
     auto partner = chat_partner_[client];
-    debug_log(client, "exit chat, partner = ", partner);
+    debug_log(client.client_socket, "exit chat, partner = ", partner.client_socket->GetFd());
     chat_partner_.erase(partner);
     chat_partner_.erase(client);
-    debug_log(client, "exit chat, sending \"EXIT_CHAT\" to patner");
+    debug_log(client.client_socket, "exit chat, sending \"EXIT_CHAT\" to patner");
     SendMessage(partner, exit_chat, MessageType::EXIT_CHAT);
-    debug_log(client, "exit chat, SENT");
+    debug_log(client.client_socket, "exit chat, SENT");
     chat_lock_.unlock();
   });
 }
 
-bool MessageServer::CreateChatQuery(std::shared_ptr<Socket> client) {
+bool MessageServer::CreateChatQuery(MessageServer::ClientView client) {
   return TryActionOrDisconnect(client, [this, &client] {
     chat_lock_.lock();
     debug_log(client, "in creating chat");
@@ -177,8 +203,8 @@ bool MessageServer::CreateChatQuery(std::shared_ptr<Socket> client) {
     debug_log(client, "create_chat msg GOT");
     const auto& partner_name = create_chat.client_name();
     debug_log(client, "partner_name = " + partner_name);
-    if (name_to_client.count(partner_name)) {
-      auto partner = name_to_client[partner_name];
+    if (name_to_client_.count(partner_name)) {
+      auto partner = name_to_client_[partner_name];
       chat_requests_[partner].push_back(client);
       debug_log(client, "out of creating chat");
     }
@@ -186,14 +212,14 @@ bool MessageServer::CreateChatQuery(std::shared_ptr<Socket> client) {
   });
 }
 
-bool MessageServer::SendMessageQuery(const std::shared_ptr<Socket> client) {
+bool MessageServer::SendMessageQuery(MessageServer::ClientView client) {
   return TryActionOrDisconnect(client, [this, &client] {
     debug_log(client, "send message query ");
     auto msg = ReceiveMessage<messages::Message>(client);
     chat_lock_.lock();
     debug_log(client, "lock acquired ");
     auto partner = chat_partner_[client];
-    debug_log(client, "partner.fd : ", partner->GetFd());
+    debug_log(client, "partner.fd : ", partner.client_socket->GetFd());
     debug_log(client, "new messages count: ",
     incoming_messages_[partner].size());
     incoming_messages_[partner].push_back(msg.message_content());
@@ -201,7 +227,7 @@ bool MessageServer::SendMessageQuery(const std::shared_ptr<Socket> client) {
   });
 }
 
-bool MessageServer::UpdateRequestsQuery(std::shared_ptr<Socket> client) {
+bool MessageServer::UpdateRequestsQuery(MessageServer::ClientView client) {
   return TryActionOrDisconnect(client, [this, &client] {
     debug_log(client, "in UpdateRequestsQuery");
     ReceiveMessage<messages::UpdateChatRequest>(client);
@@ -211,7 +237,7 @@ bool MessageServer::UpdateRequestsQuery(std::shared_ptr<Socket> client) {
     requests.set_session_id(0);
     std::vector<std::string> requester_names;
     for (const auto& requester : chat_requests_[client]) {
-      auto requester_name = client_to_name[requester];
+      auto requester_name = client_to_name_[requester];
       requests.add_partner_names(requester_name);
       requester_names.push_back(requester_name);
     }
@@ -233,10 +259,10 @@ bool MessageServer::UpdateRequestsQuery(std::shared_ptr<Socket> client) {
       messages::CreateChatAcknolagement acknolagement;
       acknolagement.set_session_id(0);
       acknolagement.set_acknolaged(name == chosen_partner);
-      SendMessage(name_to_client[name], acknolagement,
+      SendMessage(name_to_client_[name], acknolagement,
       MessageType::CREATE_CHAT_ACKNOLAGEMENT);
       if (acknolagement.acknolaged()) {
-        chat_partner_[client] = name_to_client[name];
+        chat_partner_[client] = name_to_client_[name];
         chat_partner_[chat_partner_[client]] = client;
       }
     }
@@ -246,7 +272,7 @@ bool MessageServer::UpdateRequestsQuery(std::shared_ptr<Socket> client) {
   });
 }
 
-bool MessageServer::UpdateMsgsQuery(std::shared_ptr<Socket> client) {
+bool MessageServer::UpdateMsgsQuery(MessageServer::ClientView client) {
   return TryActionOrDisconnect(client, [this, &client] {
     ReceiveMessage<messages::UpdateIncomingMessages>(client);
     chat_lock_.lock();

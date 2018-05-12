@@ -141,8 +141,7 @@ void MessageClient::UpdateChatRequest() {
 //    dbg.set_partner_name("a");
 //    SendMessage(client_socket, dbg, MessageType::CHOSEN_PARTNER);
     auto chosen_partner = on_chat_request(names);
-    messages::ChosenPartner partner_msg;
-    partner_msg.set_session_id(session_id);
+    auto partner_msg = NewMessage<messages::ChosenPartner>();
     partner_msg.set_partner_name(chosen_partner);
     for (const std::string& name : names) {
       if (name == chosen_partner) {
