@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <exception>
 #include <iostream>
-#include <zconf.h>
+#include <unistd.h>
 #include "SocketBase.h"
 #include <future>
 #include <memory>
