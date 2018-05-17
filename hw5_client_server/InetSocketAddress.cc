@@ -15,6 +15,8 @@
 #include <mutex>
 #include <algorithm>
 
+// Общие соображение про заголовочные файлы
+
 InetSocketAddress::InetSocketAddress(int port, const std::string& host) :
         port(port), host(host) {}
 
