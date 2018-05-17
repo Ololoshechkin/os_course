@@ -16,8 +16,14 @@
 #include <mutex>
 #include <algorithm>
 
+// Include what you use
+
 size_t StringToInt(const std::string& s);
+// Функция ToInt, а возвращает size_t?
 std::string IntBytes(size_t length);
+// Функция IntBytes, а принимает size_t?
+
+// Помимо этого между функциями не чувствуется симметрии(а она должна быть выражена явно)
 
 class MessageUnit {
  public:
@@ -50,6 +56,7 @@ class MessageUnit {
     auto length_bytes = client->ReadPacket(4);
     auto length = StringToInt(length_bytes);
     auto msg_bytes = client->ReadPacket(length);
+    // why not const auto?
     Message message;
     message.ParseFromString(msg_bytes);
     return message;
@@ -190,6 +197,7 @@ class MessageUnit {
   template<typename Message>
   void SendMessage(
           std::shared_ptr<Socket> client,
+// Зачем здесь передача по значению?
           const Message& message,
           MessageType message_type
   ) {
@@ -200,5 +208,7 @@ class MessageUnit {
     client->WriteBytes(serialized_msg);
   }
 };
+
+// Есть мнение что наследование имплементации - зло.
 
 #endif //HW5_CLIENT_SERVER_MESSAGEUNIT_H

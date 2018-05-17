@@ -24,6 +24,8 @@
 #include <mutex>
 #include <algorithm>
 
+// include what you use
+
 class MessageServer : public MessageUnit {
  public:
   explicit MessageServer(const InetSocketAddress& server_address);
@@ -42,6 +44,7 @@ class MessageServer : public MessageUnit {
   private:
     void Swap(ClientView& other);
   };
+  // Почему не class? Говнокод.
 
 
   struct ClientHash {
@@ -49,6 +52,7 @@ class MessageServer : public MessageUnit {
       return std::hash<int32_t>{}(client.session_id);
     }
   };
+  // Почему не перегрузка std::hash?
 
   void AttachClient(std::shared_ptr<Socket> client);
   int32_t RegisterClient(std::shared_ptr<Socket> client);

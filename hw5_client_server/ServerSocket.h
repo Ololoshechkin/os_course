@@ -18,7 +18,11 @@
 #include <mutex>
 #include <algorithm>
 
+// Заголовочные файлы
+
 class Socket;
+
+// https://google.github.io/styleguide/cppguide.html#Forward_Declarations
 
 class ServerSocket : public SocketBase {
  public:

@@ -21,6 +21,8 @@
 #include <mutex>
 #include <algorithm>
 
+// Include what you use
+
 class MessageClient : public MessageUnit {
  public:
   MessageClient(
@@ -31,6 +33,8 @@ class MessageClient : public MessageUnit {
                   std::string(const std::vector<std::string>&)
           >& on_chat_request
   );
+  // Что будет если потребуется еще пять колбеков? Не проще ли сразу заюзать паттерн делегат?
+
   bool TryRegister(const std::string& name);
   std::vector<std::string> GetUsers();
   bool StartChatWith(const std::string& name);
