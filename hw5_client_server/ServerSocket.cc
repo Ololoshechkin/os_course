@@ -6,25 +6,18 @@
 #include <netinet/in.h>
 #include <iostream>
 #include "ServerSocket.h"
-#include <future>
-#include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
 
-ServerSocket::ServerSocket(InetSocketAddress const& address) :
-        SocketBase() {
-  auto system_address = address.ToSystemSocketAddress();
+ServerSocket::ServerSocket(InetSocketAddress const& address) {
+  const auto system_address = address.ToSystemSocketAddress();
   if (bind(socket_fd, (const sockaddr*) &system_address,
            sizeof(system_address)) < 0) {
     perror("failed to bind to given address");
-    throw std::exception();
+    throw std::exception();  // TODO
   }
-  listen(socket_fd, InetUtils::kDefaultBacklogSize);
+  if (listen(socket_fd, InetUtils::kDefaultBacklogSize) < 0) {
+    perror("failed to listen on given address");
+    throw std::exception();  // TODO
+  }
 }
 
 std::shared_ptr<Socket> ServerSocket::accept() {

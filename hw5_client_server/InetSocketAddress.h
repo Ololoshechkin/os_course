@@ -8,26 +8,16 @@
 #include <string>
 #include <netinet/in.h>
 #include "InetUtils.h"
-#include <future>
-#include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
-
-using SystemSocketAddress = struct sockaddr_in;
 
 class InetSocketAddress {
  public:
+  explicit InetSocketAddress(
+          int port, const std::string& host = InetUtils::kLoopbackAddress
+  );
+  sockaddr_in ToSystemSocketAddress() const;
+ private:
     int port;
     std::string host;
-    explicit InetSocketAddress(
-            int port, const std::string& host = InetUtils::kLoopbackAddress
-    );
-    SystemSocketAddress ToSystemSocketAddress() const;
 };
 
 #endif //HW5_CLIENT_SERVER_INETSOCKETADDRESS_H

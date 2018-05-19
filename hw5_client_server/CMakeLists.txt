@@ -28,9 +28,9 @@ add_executable(
         Socket.cc Socket.h
         SocketBase.cc SocketBase.h
         InetUtils.h InetUtils.cc
-        MessageUnit.h MessageUnit.cc
+        MessageUtils.h MessageUtils.cc
         MessageServer.cc MessageServer.h
-        MessageClient.cc MessageClient.h
+        MessageClient.h
         message.pb.cc message.pb.h
         session.pb.cc session.pb.h
 )

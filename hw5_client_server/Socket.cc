@@ -4,17 +4,9 @@
 
 #include <iostream>
 #include "Socket.h"
-#include <future>
-#include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
+#include <cstddef>
 
-const size_t kBufSize = 1024;
+const std::size_t kBufSize = 1024;
 
 Socket::Socket(int socket_fd) :
         SocketBase(socket_fd) {
@@ -32,24 +24,24 @@ Socket::Socket(InetSocketAddress const& address) :
   }
 }
 
-std::string Socket::ReadPacket(size_t length) {
+std::string Socket::ReadPacket(std::size_t length) const {
   char buf[kBufSize];
   std::string bytes;
   while (length != 0) {
-    size_t bytes_to_read = std::min(length, kBufSize);
+    std::size_t bytes_to_read = std::min(length, kBufSize);
     if (recv(socket_fd, buf, bytes_to_read, 0) < 0) {
       perror("failed to read bytes");
       throw std::exception();
     }
     length -= bytes_to_read;
-    for (size_t i = 0; i < bytes_to_read; ++i) {
+    for (std::size_t i = 0; i < bytes_to_read; ++i) {
       bytes.push_back(buf[i]);
     }
   }
   return bytes;
 }
 
-void Socket::WriteBytes(const std::string& bytes) {
+void Socket::WriteBytes(const std::string& bytes) const {
   send(socket_fd, bytes.c_str(), bytes.size(), 0);
 }
 
@@ -58,8 +50,5 @@ Socket::Socket() :
 //    std::cerr << "~Socket() on fd=" << socket_fd << '\n';
 }
 
-int Socket::GetFd() const {
-  return socket_fd;
-}
 
 Socket::~Socket() = default;

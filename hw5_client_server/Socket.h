@@ -8,34 +8,20 @@
 #include "SocketBase.h"
 #include "InetSocketAddress.h"
 #include "ServerSocket.h"
-#include <future>
 #include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
+#include <cstddef>
 
 class ServerSocket;
-
-class ByteReadChanel;
-
-class ByteWriteChanel;
 
 class Socket : public SocketBase, public std::enable_shared_from_this<Socket> {
  private:
   explicit Socket(int socket_fd);
   friend ServerSocket;
-  friend ByteReadChanel;
-  friend ByteWriteChanel;
  public:
   explicit Socket();
   explicit Socket(InetSocketAddress const& address);
-  std::string ReadPacket(size_t length);
-  void WriteBytes(const std::string& bytes);
-  int GetFd() const;
+  std::string ReadPacket(std::size_t length) const;
+  void WriteBytes(const std::string& bytes) const;
   ~Socket();
 };
 

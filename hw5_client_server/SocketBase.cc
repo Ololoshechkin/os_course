@@ -8,15 +8,6 @@
 #include <iostream>
 #include <unistd.h>
 #include "SocketBase.h"
-#include <future>
-#include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
 
 SocketBase::SocketBase() :
         SocketBase(socket(AF_INET, SOCK_STREAM, 0)) {
@@ -32,8 +23,4 @@ SocketBase::SocketBase(int socket_fd) :
 
 SocketBase::~SocketBase() {
   close(socket_fd);
-}
-
-size_t SocketBase::Hash() {
-  return static_cast<size_t>(socket_fd);
 }

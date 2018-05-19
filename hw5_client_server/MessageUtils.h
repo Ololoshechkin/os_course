@@ -4,27 +4,21 @@
 #ifndef HW5_CLIENT_SERVER_MESSAGEUNIT_H
 #define HW5_CLIENT_SERVER_MESSAGEUNIT_H
 
-#include <iostream>
 #include "Socket.h"
-#include <future>
 #include <memory>
 #include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
+#include <cstddef>
 
-size_t StringToInt(const std::string& s);
-std::string IntBytes(size_t length);
+std::size_t StringToSizeT(const std::string& s);
+std::string SizeTBytes(std::size_t length);
 
-class MessageUnit {
+class MessageUtils {
  public:
   enum ClientState {
-    AVAILABLE, GOT_CHAT_REQUESTS, IN_CHAT, DISCONNECTED
+    AVAILABLE, IN_CHAT, DISCONNECTED
   };
  protected:
+  MessageUtils() = default;
   enum MessageType {
     REGISTER,
     EXIT,
@@ -47,24 +41,24 @@ class MessageUnit {
   
   template<typename Message>
   Message ReceiveMessage(const std::shared_ptr<Socket>& client) {
-    auto length_bytes = client->ReadPacket(4);
-    auto length = StringToInt(length_bytes);
-    auto msg_bytes = client->ReadPacket(length);
+    const auto length_bytes = client->ReadPacket(4);
+    const auto length = StringToSizeT(length_bytes);
+    const auto msg_bytes = client->ReadPacket(length);
     Message message;
     message.ParseFromString(msg_bytes);
     return message;
   }
   
   template<typename Message>
-  Message ReceiveMessageAndType(std::shared_ptr<Socket> client) {
+  Message ReceiveMessageAndType(const std::shared_ptr<Socket>& client) {
     ReceiveMessageType(client);
     return ReceiveMessage<Message>(client);
   }
   
   MessageType ReceiveMessageType(const std::shared_ptr<Socket>& client) {
     MessageType msg_type;
-    auto pack1 = client->ReadPacket(1);
-    auto msg_type_encoded = (int) pack1[0];
+    const auto pack1 = client->ReadPacket(1);
+    const auto msg_type_encoded = (int) pack1[0];
     switch (msg_type_encoded) {
       case 0:
         msg_type = REGISTER;
@@ -189,14 +183,14 @@ class MessageUnit {
   
   template<typename Message>
   void SendMessage(
-          std::shared_ptr<Socket> client,
+          const std::shared_ptr<Socket>& client,
           const Message& message,
           MessageType message_type
   ) {
-    auto serialized_msg = message.SerializeAsString();
-    auto length = serialized_msg.size();
+    const auto serialized_msg = message.SerializeAsString();
+    const auto length = serialized_msg.size();
     SendMessageType(client, message_type);
-    client->WriteBytes(IntBytes(length));
+    client->WriteBytes(SizeTBytes(length));
     client->WriteBytes(serialized_msg);
   }
 };

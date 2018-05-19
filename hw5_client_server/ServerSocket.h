@@ -8,15 +8,7 @@
 #include "InetSocketAddress.h"
 #include "Socket.h"
 #include "SocketBase.h"
-#include <future>
 #include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
 
 class Socket;
 

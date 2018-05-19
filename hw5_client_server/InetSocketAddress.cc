@@ -5,21 +5,12 @@
 #include <arpa/inet.h>
 #include <utility>
 #include "InetSocketAddress.h"
-#include <future>
-#include <memory>
-#include <unordered_map>
-#include <vector>
-#include <set>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <algorithm>
 
 InetSocketAddress::InetSocketAddress(int port, const std::string& host) :
         port(port), host(host) {}
-
-SystemSocketAddress InetSocketAddress::ToSystemSocketAddress() const {
-  SystemSocketAddress system_socket_address;
+        
+sockaddr_in InetSocketAddress::ToSystemSocketAddress() const {
+  sockaddr_in system_socket_address;
   system_socket_address.sin_family = AF_INET;
   system_socket_address.sin_port = htons(port);
   inet_pton(AF_INET, host.c_str(), &system_socket_address.sin_addr);
