@@ -26,7 +26,7 @@ add_executable(
         InetSocketAddress.cc InetSocketAddress.h
         ServerSocket.cc ServerSocket.h
         Socket.cc Socket.h
-        SocketBase.cc SocketBase.h
+        SocketScopedBase.cc SocketScopedBase.h
         InetUtils.h InetUtils.cc
         MessageUtils.h MessageUtils.cc
         MessageServer.cc MessageServer.h

@@ -2,19 +2,20 @@
 // Created by Vadim on 14/04/2018.
 //
 
-#include <iostream>
-#include "Socket.h"
 #include <cstddef>
+#include <iostream>
+
+#include "Socket.h"
 
 const std::size_t kBufSize = 1024;
 
 Socket::Socket(int socket_fd) :
-        SocketBase(socket_fd) {
+        SocketScopedBase(socket_fd) {
 //    std::cerr << "Socket() on fd=" << socket_fd << '\n';
 }
 
 Socket::Socket(InetSocketAddress const& address) :
-        SocketBase() {
+        SocketScopedBase() {
 //    std::cerr << "Socket() on fd=" << socket_fd << '\n';
   auto system_address = address.ToSystemSocketAddress();
   if (connect(socket_fd, (struct sockaddr*) &system_address,
@@ -46,7 +47,7 @@ void Socket::WriteBytes(const std::string& bytes) const {
 }
 
 Socket::Socket() :
-        SocketBase(-1) {
+        SocketScopedBase(-1) {
 //    std::cerr << "~Socket() on fd=" << socket_fd << '\n';
 }
 

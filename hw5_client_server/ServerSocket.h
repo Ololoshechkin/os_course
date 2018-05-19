@@ -5,14 +5,15 @@
 #ifndef HW5_CLIENT_SERVER_SERVERSOCKET_H
 #define HW5_CLIENT_SERVER_SERVERSOCKET_H
 
+#include <memory>
+
 #include "InetSocketAddress.h"
 #include "Socket.h"
-#include "SocketBase.h"
-#include <memory>
+#include "SocketScopedBase.h"
 
 class Socket;
 
-class ServerSocket : public SocketBase {
+class ServerSocket : public SocketScopedBase {
  public:
   explicit ServerSocket(InetSocketAddress const& address);
   std::shared_ptr<Socket> accept();

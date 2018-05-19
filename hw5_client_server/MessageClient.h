@@ -5,19 +5,21 @@
 #ifndef HW5_CLIENT_SERVER_MESSAGECLIENT_H
 #define HW5_CLIENT_SERVER_MESSAGECLIENT_H
 
+#include <functional>
 #include <thread>
+#include <memory>
+#include <mutex>
+#include <vector>
+
 #include "InetSocketAddress.h"
-#include "Socket.h"
-#include "MessageUtils.h"
 #include "session.pb.h"
 #include "message.pb.h"
-#include <memory>
-#include <vector>
-#include <functional>
-#include <mutex>
+#include "Socket.h"
+#include "MessageUtils.h"
+
 
 template<typename UserMessageHandler>
-class MessageClient : public MessageUtils {
+class MessageClient {
  public:
   MessageClient(
           const InetSocketAddress&, UserMessageHandler* delegate

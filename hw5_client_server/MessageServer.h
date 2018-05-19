@@ -5,21 +5,22 @@
 #ifndef HW5_CLIENT_SERVER_MESSAGESERVER_H
 #define HW5_CLIENT_SERVER_MESSAGESERVER_H
 
+#include <cstddef>
+#include <functional>
+#include <thread>
+#include <memory>
+#include <mutex>
+#include <unordered_map>
+#include <vector>
+
 #include "InetSocketAddress.h"
 #include "ServerSocket.h"
 #include "message.pb.h"
 #include "session.pb.h"
 #include "MessageUtils.h"
-#include <memory.h>
-#include <thread>
-#include <memory>
-#include <unordered_map>
-#include <vector>
-#include <functional>
-#include <mutex>
-#include <cstddef>
 
-class MessageServer : public MessageUtils {
+
+class MessageServer {
  public:
   explicit MessageServer(const InetSocketAddress& server_address);
   ~MessageServer();

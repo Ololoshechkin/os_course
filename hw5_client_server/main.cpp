@@ -1,8 +1,10 @@
 #include <iostream>
-#include "ServerSocket.h"
-#include "MessageServer.h"
-#include "MessageClient.h"
 #include <future>
+
+#include "MessageClient.h"
+#include "MessageServer.h"
+#include "ServerSocket.h"
+
 
 class MessageClientHandler {
  public:
@@ -96,7 +98,7 @@ int main(int argc, char** args) {
           std::cout << "__________________" << std::endl;
           client.ContinueUpdates();
         } else if (comand == "start_chat") {
-          if (client.state == MessageUtils::ClientState::IN_CHAT) {
+          if (client.state == ClientState::IN_CHAT) {
             std::cout
                     << "already in chat, please, exit it before starting a new one"
                     << std::endl;
@@ -114,7 +116,7 @@ int main(int argc, char** args) {
           }
           client.ContinueUpdates();
         } else if (comand == "exit_chat") {
-          if (client.state != MessageUtils::ClientState::IN_CHAT) {
+          if (client.state != ClientState::IN_CHAT) {
             std::cout << "client not belong to any chat" << std::endl;
             continue;
           }
@@ -123,7 +125,7 @@ int main(int argc, char** args) {
           client.ContinueUpdates();
           handler.extra_string = "";
         } else if (comand == "message") {
-          if (client.state != MessageUtils::ClientState::IN_CHAT) {
+          if (client.state != ClientState::IN_CHAT) {
             std::cout << "client not belong to any chat" << std::endl;
             continue;
           }
@@ -137,12 +139,12 @@ int main(int argc, char** args) {
           }
           client.ContinueUpdates();
         } else if (comand == "update_messages") {
-          if (client.state != MessageUtils::ClientState::IN_CHAT) {
+          if (client.state != ClientState::IN_CHAT) {
             std::cout << "client not belong to any chat" << std::endl;
             continue;
           }
           client.UpdateMessages();
-          if (client.state == MessageUtils::ClientState::AVAILABLE) {
+          if (client.state == ClientState::AVAILABLE) {
             std::cout << "partner disconnected from the chat" << std::endl;
             handler.extra_string = "";
           }

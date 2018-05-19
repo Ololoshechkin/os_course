@@ -2,9 +2,11 @@
 // Created by Vadim on 14/04/2018.
 //
 
-#include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/socket.h>
+
 #include <iostream>
+
 #include "ServerSocket.h"
 
 ServerSocket::ServerSocket(InetSocketAddress const& address) {

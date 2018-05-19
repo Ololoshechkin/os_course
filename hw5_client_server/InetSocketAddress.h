@@ -5,8 +5,10 @@
 #ifndef HW5_CLIENT_SERVER_INETSOCKETADDRESS_H
 #define HW5_CLIENT_SERVER_INETSOCKETADDRESS_H
 
-#include <string>
 #include <netinet/in.h>
+
+#include <string>
+
 #include "InetUtils.h"
 
 class InetSocketAddress {

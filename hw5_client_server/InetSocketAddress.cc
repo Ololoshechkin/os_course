@@ -3,7 +3,9 @@
 //
 
 #include <arpa/inet.h>
+
 #include <utility>
+
 #include "InetSocketAddress.h"
 
 InetSocketAddress::InetSocketAddress(int port, const std::string& host) :

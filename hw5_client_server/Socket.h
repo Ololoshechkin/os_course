@@ -5,15 +5,16 @@
 #ifndef HW5_CLIENT_SERVER_SOCKET_H
 #define HW5_CLIENT_SERVER_SOCKET_H
 
-#include "SocketBase.h"
+#include <cstddef>
+#include <memory>
+
 #include "InetSocketAddress.h"
 #include "ServerSocket.h"
-#include <memory>
-#include <cstddef>
+#include "SocketScopedBase.h"
 
 class ServerSocket;
 
-class Socket : public SocketBase, public std::enable_shared_from_this<Socket> {
+class Socket : public SocketScopedBase, public std::enable_shared_from_this<Socket> {
  private:
   explicit Socket(int socket_fd);
   friend ServerSocket;

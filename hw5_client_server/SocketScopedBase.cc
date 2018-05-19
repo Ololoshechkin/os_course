@@ -7,20 +7,20 @@
 #include <exception>
 #include <iostream>
 #include <unistd.h>
-#include "SocketBase.h"
+#include "SocketScopedBase.h"
 
-SocketBase::SocketBase() :
-        SocketBase(socket(AF_INET, SOCK_STREAM, 0)) {
+SocketScopedBase::SocketScopedBase() :
+        SocketScopedBase(socket(AF_INET, SOCK_STREAM, 0)) {
   if (socket_fd < 0) {
     perror("failed to open server_socket_");
     throw std::exception();
   }
 }
 
-SocketBase::SocketBase(int socket_fd) :
+SocketScopedBase::SocketScopedBase(int socket_fd) :
         socket_fd(socket_fd) {
 }
 
-SocketBase::~SocketBase() {
+SocketScopedBase::~SocketScopedBase() {
   close(socket_fd);
 }
