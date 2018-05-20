@@ -2,9 +2,9 @@
 
 all: program
 
-program: main.o ./static/hello_lib.a ./dynamic/lib_min.so .runtime/runtime_max.dylib
+program: main.o RuntimeLibrary.o ./static/hello_lib.a ./dynamic/lib_min.so 
 	g++ -std=c++17 -L. -l:./static/hello_lib.a -l:./dynamic/lib_min.so -Wl,-rpath,. -o $@ $^ -ldl
-
+	cd runtime && make && cd ..
 %.o: %.cpp
 	g++ -std=c++17 -c -o $@ $^
 
@@ -13,9 +13,6 @@ program: main.o ./static/hello_lib.a ./dynamic/lib_min.so .runtime/runtime_max.d
 
 ./dynamic/lib_min.so:
 	cd dynamic && make && cd ..
-
-.runtime/runtime_max.dylib:
-	cd runtime && make && cd ..
 
 clean:
 	cd static && make clean && cd ..
