@@ -14,6 +14,9 @@ program: main.o RuntimeLibrary.o ./static/hello_lib.a ./dynamic/lib_min.so
 ./dynamic/lib_min.so:
 	cd dynamic && make && cd ..
 
+run:
+	./program
+
 clean:
 	cd static && make clean && cd ..
 	cd dynamic && make clean && cd ..
