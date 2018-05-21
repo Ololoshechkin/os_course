@@ -1,14 +1,17 @@
+#ifndef scoped_run_lib
+#define scoped_run_lib
+
 #include <dlfcn.h>
 
 #include <stdexcept>
 #include <string>
 
-class RuntimeLibrary {
+class ScopedRuntimeLibrary {
   private:
 	void* lib_ptr;
   public:
-	RuntimeLibrary(const std::string& path);
-	~RuntimeLibrary();
+	ScopedRuntimeLibrary(const std::string& path);
+	~ScopedRuntimeLibrary();
 	template<typename Function>
 	Function GetFunction(const std::string& name) {
 		auto func_ptr = dlsym(lib_ptr, name.c_str());
@@ -20,3 +23,5 @@ class RuntimeLibrary {
 		return (Function)func_ptr;
 	}
 };
+
+#endif
