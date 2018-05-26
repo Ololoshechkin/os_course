@@ -2,8 +2,9 @@
 // Created by Vadim on 26/05/2018.
 //
 
-#include <zconf.h>
+#include <algorithm>
 #include <iostream>
+#include <unistd.h>
 #include "AsyncClient.h"
 #include "KotlinNativeServer.h"
 

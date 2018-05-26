@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <csignal>
 #include <fcntl.h>
+#include <iostream>
 #include <numeric>
 #include <unistd.h>
 #include "ScopedMultiplexer.h"
@@ -28,7 +29,6 @@
 #include <sys/event.h>
 #include <sys/time.h>
 #include <sys/errno.h>
-#include <iostream>
 
 #endif
 
@@ -65,8 +65,8 @@ bool ScopedMultiplexer::AwaitAndProcess() {
 #if OS == UNIX
                                                                                                                         
 ScopedMultiplexer::ScopedMultiplexer() :
-        file_descriptor(epoll_create(1)) {
-  if (file_descriptor == -1) {
+        mux_file_descriptor(epoll_create(1)) {
+  if (mux_file_descriptor == -1) {
     throw std::runtime_error(GetErrorMessage("Error creating epoll"));
   }
 }
@@ -78,7 +78,7 @@ void ScopedMultiplexer::SubscribeToEventImpl(
   system_event.events = event.GetEventMask();
   system_event.data.fd = event.file_descriptor;
   int res = epoll_ctl(event.file_descriptor, mode, mux_file_descriptor,
-                      &event);
+                      &system_event);
   if (res == -1) {
     throw std::runtime_error(
             GetErrorMessage("failed to subscribe to the new event"));
@@ -148,7 +148,7 @@ std::vector<Event> ScopedMultiplexer::AwaitEvents() {
   std::vector<Event> result_events;
   std::transform(
           events_array, events_array + event_count, result_events.begin(),
-          [&result_events](const struct kevent e_event) -> Event {
+          [&result_events](const struct epoll_event e_event) -> Event {
             return FromEpollEevent(e_event);
           });
   return result_events;
@@ -204,29 +204,6 @@ int Event::EventTypeToMask(Event::EventType event_type) noexcept {
     default:
       return 0;
   }
-}
-
-Event::Event(const Event& other) :
-        file_descriptor(other.file_descriptor),
-        event_types(other.event_types) {}
-
-void Event::Swap(Event& other) {
-  int tmp = other.file_descriptor;
-  other.file_descriptor = file_descriptor;
-  file_descriptor = tmp;
-  std::swap(event_types, other.event_types);
-}
-
-Event& Event::operator=(Event other) noexcept {
-  Swap(other);
-  return *this;
-}
-
-Event::Event(int file_descriptor, std::vector<Event::EventType> event_types) :
-        file_descriptor(file_descriptor), event_types(std::move(event_types)) {}
-
-Event::Event() :
-        Event(0, {}) {
 }
 
 void ScopedMultiplexer::Unsubscribe(const Event& event) {

@@ -2,6 +2,7 @@
 // Created by Vadim on 26/05/2018.
 //
 
+#include <algorithm>
 #include <iostream>
 #include "KotlinNativeServer.h"
 

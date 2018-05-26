@@ -24,7 +24,7 @@ class Event {
   std::vector<EventType> event_types;
   Event();
   Event(
-          int file_descriptor, std::vector<EventType> event_types
+          int file_descriptor, const std::vector<EventType>& event_types
   );
   Event(const Event& other);
   void Swap(Event& other);
