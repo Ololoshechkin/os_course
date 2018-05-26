@@ -32,5 +32,5 @@ std::shared_ptr<Socket> ServerSocket::accept() {
 }
 
 Event ServerSocket::GetAcceptEvent() {
-  return Event(socket_fd, {Event::EventType::kConnect});
+  return Event(socket_fd, {Event::EventType::kInput});
 }

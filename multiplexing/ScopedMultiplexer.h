@@ -18,7 +18,7 @@ class ScopedMultiplexer;
 class Event {
  public:
   enum EventType {
-    kInput, kOutput, kError, kDisconnect, kConnect
+    kInput, kOutput, kError, kDisconnect
   };
   int file_descriptor;
   std::vector<EventType> event_types;

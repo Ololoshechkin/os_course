@@ -109,8 +109,6 @@ int Event::EventTypeToMask(Event::EventType event_type) noexcept {
       return EPOLLERR;
     case Event::kDisconnect:
       return EPOLLRDHUP;
-    case Event::kConnect:
-      return EPOLLIN;
     default:
       return 0;
   }
@@ -126,7 +124,39 @@ void ScopedMultiplexer::Unsubscribe(const Event& event) {
   }
 }
 
+Event FromEpollEevent(const struct epoll_event e_event) {
+  const auto mask = e_event.events;
+  std::vector<Event::EventType> types{};
+  if (mask & EPOLLIN)
+    types.push_back(Event::EventType::kInput);
+  if (mask & EPOLLOUT)
+    types.push_back(Event::EventType::kOutput);
+  if (mask & EPOLLERR)
+    types.push_back(Event::EventType::kError);
+  if (mask & EPOLLRDHUP || mask & EPOLLHUP)
+    types.push_back(Event::EventType::kDisconnect);
+  return Event(static_cast<int>(e_event.data.fd), types);
+}
+
+std::vector<Event> ScopedMultiplexer::AwaitEvents() {
+  epoll_event events_array[kMaxEventNumber];
+  int event_count;
+  if ((event_count = epoll_wait(
+          mux_file_descriptor, events_array, kMaxEventNumber, -1)) < 0) {
+    throw std::runtime_error(GetErrorMessage("failed to wait for events"));
+  }
+  std::vector<Event> result_events;
+  std::transform(
+          events_array, events_array + event_count, result_events.begin(),
+          [&result_events](const struct kevent e_event) -> Event {
+            return FromEpollEevent(e_event);
+          });
+  return result_events;
+}
+
+
 #elif OS == MAC_OS
+
 static struct kevent ev_set;
 
 ScopedMultiplexer::ScopedMultiplexer() :
@@ -171,8 +201,6 @@ int Event::EventTypeToMask(Event::EventType event_type) noexcept {
       return EVFILT_EXCEPT;
     case Event::kDisconnect:
       return EV_EOF;
-    case Event::kConnect:
-      return EVFILT_READ;
     default:
       return 0;
   }
@@ -235,13 +263,13 @@ std::vector<Event> ScopedMultiplexer::AwaitEvents() {
   if (event_count < 1) {
     throw std::runtime_error(GetErrorMessage("failed to wait for events"));
   }
-  std::vector<Event> result;
+  std::vector<Event> result_events(event_count);
   std::transform(
-          events_array, events_array + event_count, result.begin(),
-          [&result](const struct kevent k_event) -> Event {
+          events_array, events_array + event_count, result_events.begin(),
+          [&result_events](const struct kevent k_event) -> Event {
             return FromKevent(k_event);
           });
-  return result;
+  return result_events;
 }
 
 #endif
