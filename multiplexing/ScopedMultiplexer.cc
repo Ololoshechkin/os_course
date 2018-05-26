@@ -100,9 +100,8 @@ void ScopedMultiplexer::SubscribeToEventImpl(
   static struct epoll_event system_event{};
   system_event.events = event.GetEventMask();
   system_event.data.fd = event.file_descriptor;
-  int res = epoll_ctl(event.file_descriptor, mode, mux_file_descriptor,
-                      &system_event);
-  if (res == -1) {
+  if (epoll_ctl(event.file_descriptor, mode, mux_file_descriptor,
+                      &system_event) < 0) {
     throw std::runtime_error(
             GetErrorMessage("failed to subscribe to the new event"));
   }
