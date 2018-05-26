@@ -26,12 +26,8 @@ void KotlinNativeServer::Run() {
             client->GetReceiveEvent(), client_events_handler);
     return true;
   };
-  std::cout << "multiplexer.SubscribeToEvent(\n"
-               "          server_socket.GetAcceptEvent(), on_accept_handler);"
-            << std::endl;
   multiplexer.SubscribeToEvent(
           server_socket.GetAcceptEvent(), on_accept_handler);
-  std::cout << "OK" << std::endl;
   while (multiplexer.AwaitAndProcess());
 }
 

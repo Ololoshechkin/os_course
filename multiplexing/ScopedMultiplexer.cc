@@ -78,7 +78,9 @@ Event& Event::operator=(Event other) noexcept {
   return *this;
 }
 
-Event::Event(int file_descriptor, const std::vector<Event::EventType>& event_types) :
+Event::Event(
+        int file_descriptor, const std::vector<Event::EventType>& event_types
+) :
         file_descriptor(file_descriptor), event_types(event_types) {}
 
 Event::Event() :
@@ -97,10 +99,10 @@ ScopedMultiplexer::ScopedMultiplexer() :
 void ScopedMultiplexer::SubscribeToEventImpl(
         const Event& event, const ScopedMultiplexer::Handler& handler, int mode
 ) {
-  static struct epoll_event system_event{};
+  struct epoll_event system_event{};
   system_event.events = event.GetEventMask();
   system_event.data.fd = event.file_descriptor;
-  if (epoll_ctl(event.file_descriptor, mode, mux_file_descriptor,
+  if (epoll_ctl(mux_file_descriptor, mode,event.file_descriptor,
                       &system_event) < 0) {
     throw std::runtime_error(
             GetErrorMessage("failed to subscribe to the new event"));
