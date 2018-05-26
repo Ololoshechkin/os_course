@@ -148,8 +148,9 @@ void ScopedMultiplexer::Unsubscribe(const Event& event) {
   }
 }
 
-Event FromEpollEevent(const struct epoll_event e_event) {
+Event FromEpollEevent(const struct epoll_event& e_event) {
   const auto mask = e_event.events;
+  std::cout << "from epoll event with mask : " << mask << std::endl;
   std::vector<Event::EventType> types{};
   if (mask & EPOLLIN)
     types.push_back(Event::EventType::kInput);
@@ -165,14 +166,17 @@ Event FromEpollEevent(const struct epoll_event e_event) {
 std::vector<Event> ScopedMultiplexer::AwaitEvents() {
   epoll_event events_array[kMaxEventNumber];
   int event_count;
+  std::cout << "waiting for events..." << std::endl;
   if ((event_count = epoll_wait(
           mux_file_descriptor, events_array, kMaxEventNumber, -1)) < 0) {
+    std::cout << "exception while waiting" << std::endl;
     throw std::runtime_error(GetErrorMessage("failed to wait for events"));
   }
-  std::vector<Event> result_events;
+  std::cout << "got " << event_count << " events" << std::endl;
+  std::vector<Event> result_events(event_count);
   std::transform(
           events_array, events_array + event_count, result_events.begin(),
-          [&result_events](const struct epoll_event e_event) -> Event {
+          [&result_events](const struct epoll_event& e_event) -> Event {
             return FromEpollEevent(e_event);
           });
   return result_events;
