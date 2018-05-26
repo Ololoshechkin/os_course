@@ -62,6 +62,29 @@ bool ScopedMultiplexer::AwaitAndProcess() {
           });
 }
 
+Event::Event(const Event& other) :
+        file_descriptor(other.file_descriptor),
+        event_types(other.event_types) {}
+
+void Event::Swap(Event& other) {
+  int tmp = other.file_descriptor;
+  other.file_descriptor = file_descriptor;
+  file_descriptor = tmp;
+  std::swap(event_types, other.event_types);
+}
+
+Event& Event::operator=(Event other) noexcept {
+  Swap(other);
+  return *this;
+}
+
+Event::Event(int file_descriptor, const std::vector<Event::EventType>& event_types) :
+        file_descriptor(file_descriptor), event_types(event_types) {}
+
+Event::Event() :
+        Event(0, {}) {
+}
+
 #if OS == UNIX
                                                                                                                         
 ScopedMultiplexer::ScopedMultiplexer() :
@@ -156,7 +179,6 @@ std::vector<Event> ScopedMultiplexer::AwaitEvents() {
 
 
 #elif OS == MAC_OS
-
 static struct kevent ev_set;
 
 ScopedMultiplexer::ScopedMultiplexer() :
