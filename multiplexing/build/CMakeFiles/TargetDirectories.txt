@@ -1,0 +1,3 @@
+/os_course/multiplexing/build/CMakeFiles/edit_cache.dir
+/os_course/multiplexing/build/CMakeFiles/rebuild_cache.dir
+/os_course/multiplexing/build/CMakeFiles/multiplexing.dir

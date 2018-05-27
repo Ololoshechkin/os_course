@@ -15,13 +15,12 @@ AsyncClient::AsyncClient(const InetSocketAddress& address) :
 }
 
 void AsyncClient::Start() {
-//  socket.Connect();
   if (!socket.Connect()) {
     std::cout << "not-connected" << std::endl;
     multiplexer.SubscribeToEvent(
             socket.GetSendEvent(), [this](const Event& event) -> bool {
               std::cout << "CALLBACK" << std::endl;
-//              socket.Connect();
+              socket.Connect();
               return false;
             });
     std::cout << "subscribed" << std::endl;
@@ -50,9 +49,12 @@ void AsyncClient::Start() {
                 }
                 case Event::EventType::kOutput: {
                   std::string request = input_strings.back();
-                  if (socket.TryWriteBytes(request)) {
+                  if (socket.TryWriteBytes(request + KotlinNativeServer::kQueryEnd)) {
                     ++requests_in_porcess;
-                  }
+		    std::cout << "requests_in_porcess = " << requests_in_porcess << std::endl;
+                  } else {
+		    std::cout << "unsuccessful send" << std::endl;
+		  }
                   CheckAndUpdateSubscriptions(
                           event, socket_event_handler);
                   break;

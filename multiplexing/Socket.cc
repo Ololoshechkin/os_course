@@ -21,6 +21,7 @@ Socket::Socket(InetSocketAddress const& address) :
 bool Socket::TryWriteBytes(const std::string& bytes) const {
   if (send(socket_fd, bytes.c_str(), bytes.size(), 0) < 0) {
     if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+      errno = 0;
       return false;
     }
     throw std::runtime_error(GetErrorMessage("failed to send bytes"));
@@ -52,16 +53,17 @@ Event Socket::GetSendAndReceiveEvent() {
 
 std::string Socket::ReadBytes() const {
   std::cout << "reading bytes..." << std::endl;
-  static char buf[kBufSize];
+  char buf[kBufSize];
   std::string received_bucket;
   while (true) {
     std::cout << " recv(socket_fd, buf, kBufSize, 0);" << std::endl;
     const auto received_count = recv(socket_fd, buf, kBufSize, 0);
     std::cout << " received_count = " << received_count << std::endl;
     if (received_count <= 0) {
-      if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+      if (received_count == 0 || (errno == EAGAIN) || (errno == EWOULDBLOCK)) {
         std::cout << "(errno == EAGAIN) || (errno == EWOULDBLOCK) => break"
                   << std::endl;
+        errno = 0;
         break;
       } else {
         std::cout << "exception =(" << std::endl;
@@ -69,7 +71,7 @@ std::string Socket::ReadBytes() const {
       }
     }
     for (size_t i = 0; i < received_count; ++i) {
-      std::cout << "received_bucket.push_back(buf[" << i << "]);" << std::endl;
+      std::cout << "received_bucket.push_back( " << buf[i] << " );" << std::endl;
       received_bucket.push_back(buf[i]);
     }
   }
