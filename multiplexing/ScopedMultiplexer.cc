@@ -79,12 +79,18 @@ Event& Event::operator=(Event other) noexcept {
 }
 
 Event::Event(
-        int file_descriptor, const std::vector<Event::EventType>& event_types
+        int file_descriptor, const std::vector<Event::EventType>& event_types,
+        const std::function<void()>& deleter
 ) :
-        file_descriptor(file_descriptor), event_types(event_types) {}
+        file_descriptor(file_descriptor), event_types(event_types),
+        deleter(deleter) {}
 
 Event::Event() :
         Event(0, {}) {
+}
+
+Event::~Event() {
+  deleter();
 }
 
 #if OS == UNIX

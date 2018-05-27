@@ -22,10 +22,13 @@ class Event {
   };
   int file_descriptor;
   std::vector<EventType> event_types;
+  std::function<void()> deleter;
   Event();
   Event(
-          int file_descriptor, const std::vector<EventType>& event_types
+          int file_descriptor, const std::vector<EventType>& event_types,
+          const std::function<void()>& deleter = [] {}
   );
+  ~Event();
   Event(const Event& other);
   void Swap(Event& other);
   bool operator==(const Event& other) const noexcept;
@@ -37,7 +40,7 @@ class Event {
 
 class ScopedMultiplexer {
  public:
-  using Handler = std::function<bool (const Event&)>;
+  using Handler = std::function<bool(const Event&)>;
   static const int kMaxEventNumber = 1000;
   ScopedMultiplexer();
   ~ScopedMultiplexer();
@@ -48,7 +51,7 @@ class ScopedMultiplexer {
   bool AwaitAndProcess(); // false if error/close/exit
  private:
   int mux_file_descriptor;
-  std::unordered_map<int , Handler> fd_event_to_handler;
+  std::unordered_map<int, Handler> fd_event_to_handler;
   void
   SubscribeToEventImpl(const Event& event, const Handler& handler, int mode);
 };
