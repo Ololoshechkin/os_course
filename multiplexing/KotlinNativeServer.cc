@@ -95,7 +95,8 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
                     }
                   }
                   CheckAndChangeSubscription(
-                          received_bytes, client, client_events_handler);
+                          fd_to_receive_buffer[event.file_descriptor], client,
+                          client_events_handler);
                   break;
                 }
                 default: {
