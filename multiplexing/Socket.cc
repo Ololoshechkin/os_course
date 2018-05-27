@@ -38,25 +38,21 @@ Socket::Socket() :
 }
 
 Event Socket::GetReceiveEvent() {
-  const auto self_ptr = shared_from_this();
   return Event(
           socket_fd, {Event::EventType::kInput, Event::EventType::kDisconnect,
-                      Event::EventType::kError}, [self_ptr] {});
+                      Event::EventType::kError});
 }
 
 Event Socket::GetSendEvent() {
-  const auto self_ptr = shared_from_this();
   return Event(
           socket_fd, {Event::EventType::kOutput, Event::EventType::kDisconnect,
-                      Event::EventType::kError}, [self_ptr] {});
+                      Event::EventType::kError});
 }
 
 Event Socket::GetSendAndReceiveEvent() {
-  const auto self_ptr = shared_from_this();
   return Event(
           socket_fd, {Event::EventType::kInput, Event::EventType::kOutput,
-                      Event::EventType::kDisconnect, Event::EventType::kError},
-          [self_ptr] {});
+                      Event::EventType::kDisconnect, Event::EventType::kError});
 }
 
 std::string Socket::ReadBytes() const {
