@@ -112,6 +112,8 @@ void AsyncClient::ProcessBuffer() {
 void AsyncClient::CheckAndUpdateSubscriptions(
         const Event& event, const ScopedMultiplexer::Handler& events_handler
 ) {
+  std::cout << "requests_in_porcess = " << requests_in_porcess << " , "
+            << "input_strings.size()" << input_strings.size() << std::endl;
   if (input_strings.empty() && requests_in_porcess == 0) {
     multiplexer.Unsubscribe(event);
     socket_is_subscribed = false;
@@ -126,11 +128,8 @@ void AsyncClient::CheckAndUpdateSubscriptions(
       if (socket_is_subscribed)
         multiplexer.ChangeSubscription(
                 socket.GetSendEvent(), events_handler);
-      else {
-        std::cout << "requests_in_porcess == 0 && !input_strings.empty()"
-                  << std::endl;
+      else
         multiplexer.SubscribeToEvent(socket.GetSendEvent(), events_handler);
-      }
     } else {
       if (socket_is_subscribed)
         multiplexer.ChangeSubscription(
