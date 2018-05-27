@@ -14,10 +14,9 @@
 
 class ServerSocket;
 
-class Socket
-        :
-                public SocketScopedBase,
-                public std::enable_shared_from_this<Socket> {
+class Socket : public SocketScopedBase, public std::enable_shared_from_this<
+        Socket
+> {
  private:
   explicit Socket(int socket_fd);
   friend ServerSocket;
@@ -27,7 +26,9 @@ class Socket
   explicit Socket(InetSocketAddress const& address);
   bool Connect();
   std::string ReadBytes() const;
-  bool TryWriteBytes(const std::string& bytes) const;
+  void TryWriteBytes(
+          std::string& bytes
+  ) const;  // returns string sufix that is not sent
   Event GetReceiveEvent();
   Event GetSendEvent();
   Event GetSendAndReceiveEvent();

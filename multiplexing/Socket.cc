@@ -18,15 +18,19 @@ Socket::Socket(InetSocketAddress const& address) :
         address(address) {
 }
 
-bool Socket::TryWriteBytes(const std::string& bytes) const {
-  if (send(socket_fd, bytes.c_str(), bytes.size(), 0) < 0) {
-    if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
-      errno = 0;
-      return false;
+void Socket::TryWriteBytes(std::string& bytes) const {
+  while (!bytes.empty()) {
+    const auto send_result = send(socket_fd, bytes.c_str(), bytes.size(), 0);
+    if (send_result < 0) {
+      if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+        errno = 0;
+        break;
+      }
+      throw std::runtime_error(GetErrorMessage("failed to send bytes"));
     }
-    throw std::runtime_error(GetErrorMessage("failed to send bytes"));
+    auto position = static_cast<std::size_t>(send_result);
+    bytes = bytes.substr(position, bytes.size() - position);
   }
-  return true;
 }
 
 Socket::Socket() :
@@ -71,7 +75,8 @@ std::string Socket::ReadBytes() const {
       }
     }
     for (size_t i = 0; i < received_count; ++i) {
-      std::cout << "received_bucket.push_back( " << buf[i] << " );" << std::endl;
+      std::cout << "received_bucket.push_back( " << buf[i] << " );"
+                << std::endl;
       received_bucket.push_back(buf[i]);
     }
   }

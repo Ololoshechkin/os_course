@@ -22,6 +22,7 @@ class AsyncClient {
   std::vector<std::string> input_strings;
   size_t requests_in_porcess;
   std::string current_received_buffer;
+  std::string current_string_to_send;
   bool socket_is_subscribed;
   void ProcessBuffer();
   void CheckAndUpdateSubscriptions(

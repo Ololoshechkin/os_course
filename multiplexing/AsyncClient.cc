@@ -48,13 +48,18 @@ void AsyncClient::Start() {
                   break;
                 }
                 case Event::EventType::kOutput: {
-                  std::string request = input_strings.back();
-                  if (socket.TryWriteBytes(request + KotlinNativeServer::kQueryEnd)) {
+                  if (current_string_to_send.empty()) {
+                    current_string_to_send = input_strings.back() +
+                                             KotlinNativeServer::kQueryEnd;
+                  }
+                  socket.TryWriteBytes(current_string_to_send);
+                  if (current_string_to_send.empty()) {
                     ++requests_in_porcess;
-		    std::cout << "requests_in_porcess = " << requests_in_porcess << std::endl;
+                    std::cout << "requests_in_porcess = " << requests_in_porcess
+                              << std::endl;
                   } else {
-		    std::cout << "unsuccessful send" << std::endl;
-		  }
+                    std::cout << "unsuccessful send" << std::endl;
+                  }
                   CheckAndUpdateSubscriptions(
                           event, socket_event_handler);
                   break;

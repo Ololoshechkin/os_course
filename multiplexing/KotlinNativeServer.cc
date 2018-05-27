@@ -20,7 +20,7 @@ void KotlinNativeServer::Run() {
     const auto client = server_socket.accept();
     std::string received_buffer;
     const auto client_events_handler = GetClientEventHandler(
-            client, received_buffer);
+            client);
     multiplexer.SubscribeToEvent(
             client->GetReceiveEvent(), client_events_handler);
     return true;
@@ -49,22 +49,22 @@ void KotlinNativeServer::CheckAndChangeSubscription(
 }
 
 KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
-        std::shared_ptr<Socket> client, std::string received_bytes
+        std::shared_ptr<Socket> client
 ) {
   const ScopedMultiplexer::Handler client_events_handler = [this,
-                                                            &received_bytes,
                                                             &client_events_handler,
                                                             client
   ](const Event& event) -> bool {
     std::cout << "event occured on fd = " << event.file_descriptor << std::endl;
     std::for_each(
             event.event_types.begin(), event.event_types.end(),
-            [this, &client_events_handler, &received_bytes, &event, client](
+            [this, &client_events_handler, &event, client](
                     Event::EventType type
             ) {
               switch (type) {
                 case Event::kInput: {
                   std::cout << "Event::kInput" << std::endl;
+                  auto received_bytes = fd_to_receive_buffer[event.file_descriptor];
                   received_bytes += client->ReadBytes();
                   CheckAndChangeSubscription(
                           received_bytes, client, client_events_handler);
@@ -76,12 +76,17 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
                    * and while we don't block on sending reply
                   */
                   while (true) {
+                    auto received_bytes = fd_to_receive_buffer[event.file_descriptor];
                     size_t request_end = std::find(
                             received_bytes.begin(), received_bytes.end(),
                             kQueryEnd) - received_bytes.begin();
-                    std::string reply = ProcessRequest(
-                            received_bytes.substr(0, request_end));
-                    if (client->TryWriteBytes(reply)) {
+                    if (fd_to_send_buffer[event.file_descriptor].empty()) {
+                      fd_to_send_buffer[event.file_descriptor] = ProcessRequest(
+                              received_bytes.substr(0, request_end));
+                    }
+                    client->TryWriteBytes(
+                            fd_to_send_buffer[event.file_descriptor]);
+                    if (fd_to_send_buffer[event.file_descriptor].empty()) {
                       received_bytes = received_bytes.substr(
                               request_end + 1,
                               received_bytes.size() - request_end - 1);
