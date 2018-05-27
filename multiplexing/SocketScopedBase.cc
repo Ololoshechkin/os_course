@@ -20,16 +20,12 @@ SocketScopedBase::SocketScopedBase() :
 
 SocketScopedBase::SocketScopedBase(int socket_fd) :
         socket_fd(socket_fd) {
+  auto flags = fcntl(socket_fd, F_GETFL, 0);
+  if (fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK) < 0) {
+    throw std::runtime_error(GetErrorMessage("failed to change blocking type"));
+  }
 }
 
 SocketScopedBase::~SocketScopedBase() {
   close(socket_fd);
-}
-
-void SocketScopedBase::SetBlocking(bool blocking) {
-  auto flags = fcntl(socket_fd, F_GETFL);
-  flags = blocking ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
-  if (fcntl(socket_fd, F_SETFL, flags) < 0) {
-    throw std::runtime_error(GetErrorMessage("failed to change blocking type"));
-  }
 }

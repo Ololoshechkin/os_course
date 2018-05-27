@@ -15,8 +15,6 @@ class SocketScopedBase {
   explicit SocketScopedBase(int socket_fd);
   virtual ~SocketScopedBase();
  public:
-  void SetBlocking(bool);
-  
   virtual bool operator==(const SocketScopedBase& other) const {
     return socket_fd == other.socket_fd;
   }

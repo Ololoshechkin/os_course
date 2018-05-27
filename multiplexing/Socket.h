@@ -21,10 +21,11 @@ class Socket
  private:
   explicit Socket(int socket_fd);
   friend ServerSocket;
+  InetSocketAddress address;
  public:
   Socket();
   explicit Socket(InetSocketAddress const& address);
-  std::string ReadPacket(std::size_t length) const;
+  bool Connect();
   std::string ReadBytes() const;
   bool TryWriteBytes(const std::string& bytes) const;
   Event GetReceiveEvent();

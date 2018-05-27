@@ -10,7 +10,6 @@ const char KotlinNativeServer::kQueryEnd = '#';
 
 KotlinNativeServer::KotlinNativeServer(const InetSocketAddress& address) :
         server_socket(address) {
-  server_socket.SetBlocking(false);
 };
 KotlinNativeServer::~KotlinNativeServer() = default;
 

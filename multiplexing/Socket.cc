@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <sys/select.h>
 #include "Socket.h"
 #include "ExceptionHelp.h"
 
@@ -13,28 +14,8 @@ Socket::Socket(int socket_fd) :
         SocketScopedBase(socket_fd) {
 }
 
-Socket::Socket(InetSocketAddress const& address) {
-  auto system_address = address.ToSystemSocketAddress();
-  if (connect(socket_fd, (struct sockaddr*) &system_address,
-              sizeof(system_address)) < 0) {
-    throw std::runtime_error(GetErrorMessage("failed to connect"));
-  }
-}
-
-std::string Socket::ReadPacket(std::size_t length) const {
-  char buf[kBufSize];
-  std::string bytes;
-  while (length != 0) {
-    std::size_t bytes_to_read = std::min(length, kBufSize);
-    if (recv(socket_fd, buf, bytes_to_read, 0) < 0) {
-      throw std::runtime_error(GetErrorMessage("failed to receive bytes"));
-    }
-    length -= bytes_to_read;
-    for (std::size_t i = 0; i < bytes_to_read; ++i) {
-      bytes.push_back(buf[i]);
-    }
-  }
-  return bytes;
+Socket::Socket(InetSocketAddress const& address) :
+        address(address) {
 }
 
 bool Socket::TryWriteBytes(const std::string& bytes) const {
@@ -52,21 +33,21 @@ Socket::Socket() :
 }
 
 Event Socket::GetReceiveEvent() {
-  return Event(socket_fd,
-               {Event::EventType::kInput, Event::EventType::kDisconnect,
-                Event::EventType::kError});
+  return Event(
+          socket_fd, {Event::EventType::kInput, Event::EventType::kDisconnect,
+                      Event::EventType::kError});
 }
 
 Event Socket::GetSendEvent() {
-  return Event(socket_fd,
-               {Event::EventType::kOutput, Event::EventType::kDisconnect,
-                Event::EventType::kError});
+  return Event(
+          socket_fd, {Event::EventType::kOutput, Event::EventType::kDisconnect,
+                      Event::EventType::kError});
 }
 
 Event Socket::GetSendAndReceiveEvent() {
-  return Event(socket_fd, {Event::EventType::kInput, Event::EventType::kOutput,
-                           Event::EventType::kDisconnect,
-                           Event::EventType::kError});
+  return Event(
+          socket_fd, {Event::EventType::kInput, Event::EventType::kOutput,
+                      Event::EventType::kDisconnect, Event::EventType::kError});
 }
 
 std::string Socket::ReadBytes() const {
@@ -86,6 +67,20 @@ std::string Socket::ReadBytes() const {
     }
   }
   return received_bucket;
+}
+
+bool Socket::Connect() {
+  auto system_address = address.ToSystemSocketAddress();
+  const auto result = connect(
+          socket_fd, (struct sockaddr*) &system_address,
+          sizeof(system_address));
+  if (result == 0 || errno == EINPROGRESS) {
+    return false;
+  }
+  if (result < 0) {
+    throw std::runtime_error(GetErrorMessage("failed to connect"));
+  }
+  return true;
 }
 
 Socket::~Socket() = default;

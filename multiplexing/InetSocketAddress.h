@@ -11,6 +11,7 @@
 class InetSocketAddress {
  public:
   static const std::string kLoopbackAddress;
+  InetSocketAddress();
   explicit InetSocketAddress(
           int port, const std::string& host = kLoopbackAddress
   );

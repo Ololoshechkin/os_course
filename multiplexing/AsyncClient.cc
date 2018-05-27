@@ -11,11 +11,24 @@
 const std::string AsyncClient::kExitMessage = "exit"; // NOLINT
 
 AsyncClient::AsyncClient(const InetSocketAddress& address) :
-        socket(address), requests_in_porcess(0) {
-  socket.SetBlocking(false);
+        socket(address), requests_in_porcess(0), socket_is_subscribed(false) {
 }
 
 void AsyncClient::Start() {
+//  socket.Connect();
+  if (!socket.Connect()) {
+    std::cout << "not-connected" << std::endl;
+    multiplexer.SubscribeToEvent(
+            socket.GetSendEvent(), [this](const Event& event) -> bool {
+              std::cout << "CALLBACK" << std::endl;
+//              socket.Connect();
+              return false;
+            });
+    std::cout << "subscribed" << std::endl;
+    bool working = multiplexer.AwaitAndProcess();
+    std::cout << "awaited (working = " << working << ")" << std::endl;
+    multiplexer.Unsubscribe(socket.GetSendEvent());
+  }
   const ScopedMultiplexer::Handler socket_event_handler = [this,
                                                            &socket_event_handler
   ](
@@ -98,15 +111,19 @@ void AsyncClient::CheckAndUpdateSubscriptions(
   } else {
     if (input_strings.empty()) {
       if (socket_is_subscribed)
-        multiplexer.ChangeSubscription(socket.GetSendEvent(), events_handler);
-      else
-        multiplexer.SubscribeToEvent(socket.GetSendEvent(), events_handler);
-    } else if (requests_in_porcess == 0) {
-      if (socket_is_subscribed)
         multiplexer.ChangeSubscription(
                 socket.GetReceiveEvent(), events_handler);
       else
         multiplexer.SubscribeToEvent(socket.GetReceiveEvent(), events_handler);
+    } else if (requests_in_porcess == 0) {
+      if (socket_is_subscribed)
+        multiplexer.ChangeSubscription(
+                socket.GetSendEvent(), events_handler);
+      else {
+        std::cout << "requests_in_porcess == 0 && !input_strings.empty()"
+                  << std::endl;
+        multiplexer.SubscribeToEvent(socket.GetSendEvent(), events_handler);
+      }
     } else {
       if (socket_is_subscribed)
         multiplexer.ChangeSubscription(

@@ -18,3 +18,7 @@ sockaddr_in InetSocketAddress::ToSystemSocketAddress() const {
   inet_pton(AF_INET, host.c_str(), &system_socket_address.sin_addr);
   return system_socket_address;
 }
+
+InetSocketAddress::InetSocketAddress() :
+        port(-1) {
+}
