@@ -56,31 +56,22 @@ Event Socket::GetSendAndReceiveEvent() {
 }
 
 std::string Socket::ReadBytes() const {
-  std::cout << "reading bytes..." << std::endl;
   char buf[kBufSize];
   std::string received_bucket;
   while (true) {
-    std::cout << " recv(socket_fd, buf, kBufSize, 0);" << std::endl;
     const auto received_count = recv(socket_fd, buf, kBufSize, 0);
-    std::cout << " received_count = " << received_count << std::endl;
     if (received_count <= 0) {
       if (received_count == 0 || (errno == EAGAIN) || (errno == EWOULDBLOCK)) {
-        std::cout << "(errno == EAGAIN) || (errno == EWOULDBLOCK) => break"
-                  << std::endl;
         errno = 0;
         break;
       } else {
-        std::cout << "exception =(" << std::endl;
         throw std::runtime_error(GetErrorMessage("failed to receive bytes"));
       }
     }
     for (size_t i = 0; i < received_count; ++i) {
-      std::cout << "received_bucket.push_back( " << buf[i] << " );"
-                << std::endl;
       received_bucket.push_back(buf[i]);
     }
   }
-  std::cout << "return received_bucket;" << std::endl;
   return received_bucket;
 }
 

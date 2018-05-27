@@ -16,16 +16,12 @@ AsyncClient::AsyncClient(const InetSocketAddress& address) :
 
 void AsyncClient::Start() {
   if (!socket.Connect()) {
-    std::cout << "not-connected" << std::endl;
     multiplexer.SubscribeToEvent(
             socket.GetSendEvent(), [this](const Event& event) -> bool {
-              std::cout << "CALLBACK" << std::endl;
               socket.Connect();
               return false;
             });
-    std::cout << "subscribed" << std::endl;
     bool working = multiplexer.AwaitAndProcess();
-    std::cout << "awaited (working = " << working << ")" << std::endl;
     multiplexer.Unsubscribe(socket.GetSendEvent());
   }
   const ScopedMultiplexer::Handler socket_event_handler = [this,
@@ -56,8 +52,6 @@ void AsyncClient::Start() {
                   if (current_string_to_send.empty()) {
                     input_strings.pop_back();
                     ++requests_in_porcess;
-                    std::cout << "requests_in_porcess = " << requests_in_porcess
-                              << std::endl;
                   } else {
                     std::cout << "unsuccessful send" << std::endl;
                   }
@@ -113,8 +107,6 @@ void AsyncClient::ProcessBuffer() {
 void AsyncClient::CheckAndUpdateSubscriptions(
         const Event& event, const ScopedMultiplexer::Handler& events_handler
 ) {
-  std::cout << "requests_in_porcess = " << requests_in_porcess << " , "
-            << "input_strings.size()" << input_strings.size() << std::endl;
   if (input_strings.empty() && requests_in_porcess == 0) {
     multiplexer.Unsubscribe(event);
     socket_is_subscribed = false;
