@@ -64,10 +64,10 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
               switch (type) {
                 case Event::kInput: {
                   std::cout << "Event::kInput" << std::endl;
-                  auto received_bytes = fd_to_receive_buffer[event.file_descriptor];
-                  received_bytes += client->ReadBytes();
+                  fd_to_receive_buffer[event.file_descriptor] += client->ReadBytes();
+                  std::cout << "received_bytes : " << fd_to_receive_buffer[event.file_descriptor] << std::endl;
                   CheckAndChangeSubscription(
-                          received_bytes, client, client_events_handler);
+                          fd_to_receive_buffer[event.file_descriptor], client, client_events_handler);
                   break;
                 }
                 case Event::kOutput: {
@@ -80,6 +80,10 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
                     size_t request_end = std::find(
                             received_bytes.begin(), received_bytes.end(),
                             kQueryEnd) - received_bytes.begin();
+                    if (request_end ==
+                        received_bytes.end() - received_bytes.begin()) {
+                      break;
+                    }
                     if (fd_to_send_buffer[event.file_descriptor].empty()) {
                       fd_to_send_buffer[event.file_descriptor] = ProcessRequest(
                               received_bytes.substr(0, request_end));
@@ -87,7 +91,7 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
                     client->TryWriteBytes(
                             fd_to_send_buffer[event.file_descriptor]);
                     if (fd_to_send_buffer[event.file_descriptor].empty()) {
-                      received_bytes = received_bytes.substr(
+                      fd_to_receive_buffer[event.file_descriptor] = received_bytes.substr(
                               request_end + 1,
                               received_bytes.size() - request_end - 1);
                     } else {

@@ -98,4 +98,6 @@ bool Socket::Connect() {
   return true;
 }
 
-Socket::~Socket() = default;
+Socket::~Socket() {
+  std::cout << "~Socket()" << std::endl;
+}

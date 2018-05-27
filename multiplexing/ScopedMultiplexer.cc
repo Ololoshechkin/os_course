@@ -113,7 +113,8 @@ void ScopedMultiplexer::SubscribeToEventImpl(
     throw std::runtime_error(
             GetErrorMessage("failed to subscribe to the new event"));
   }
-  fd_event_to_handler.emplace(event.file_descriptor, handler);
+  if (!fd_event_to_handler.count(event.file_descriptor))
+    fd_event_to_handler[event.file_descriptor] = handler;
 }
 
 void ScopedMultiplexer::SubscribeToEvent(
