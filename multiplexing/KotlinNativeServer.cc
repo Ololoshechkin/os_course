@@ -56,6 +56,7 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
                                                             &client_events_handler,
                                                             client
   ](const Event& event) -> bool {
+    std::cout << "event occured on fd = " << event.file_descriptor << std::endl;
     std::for_each(
             event.event_types.begin(), event.event_types.end(),
             [this, &client_events_handler, &received_bytes, &event, client](
@@ -63,12 +64,14 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
             ) {
               switch (type) {
                 case Event::kInput: {
+                  std::cout << "Event::kInput" << std::endl;
                   received_bytes += client->ReadBytes();
                   CheckAndChangeSubscription(
                           received_bytes, client, client_events_handler);
                   break;
                 }
                 case Event::kOutput: {
+                  std::cout << "Event::kOutput" << std::endl;
                   /* while there is kQueryEnd in <tt>received_bytes</tt> 
                    * and while we don't block on sending reply
                   */
@@ -91,6 +94,7 @@ KotlinNativeServer::Handler KotlinNativeServer::GetClientEventHandler(
                   break;
                 }
                 default: {
+                  std::cout << "Event::kError||kDisconnect" << std::endl;
                   multiplexer.Unsubscribe(event);
                   break;
                 }
