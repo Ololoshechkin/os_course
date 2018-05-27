@@ -54,6 +54,7 @@ void AsyncClient::Start() {
                   }
                   socket.TryWriteBytes(current_string_to_send);
                   if (current_string_to_send.empty()) {
+                    input_strings.pop_back();
                     ++requests_in_porcess;
                     std::cout << "requests_in_porcess = " << requests_in_porcess
                               << std::endl;
