@@ -15,15 +15,7 @@ AsyncClient::AsyncClient(const InetSocketAddress& address) :
 }
 
 void AsyncClient::Start() {
-  if (!socket.Connect()) {
-    multiplexer.SubscribeToEvent(
-            socket.GetSendEvent(), [this](const Event& event) -> bool {
-              socket.Connect();
-              return false;
-            });
-    bool working = multiplexer.AwaitAndProcess();
-    multiplexer.Unsubscribe(socket.GetSendEvent());
-  }
+  bool connected_to_server = false;
   const ScopedMultiplexer::Handler socket_event_handler = [this,
                                                            &socket_event_handler
   ](
@@ -68,17 +60,35 @@ void AsyncClient::Start() {
               return should_continue;
             });
   };
+  if (socket.Connect()) {
+    connected_to_server = true;
+  } else {
+    multiplexer.SubscribeToEvent(
+            socket.GetSendEvent(),
+            [this, &connected_to_server, &socket_event_handler](
+                    const Event& event
+            ) -> bool {
+              connected_to_server = true;
+              CheckAndUpdateSubscriptions(
+                      socket.GetSendEvent(), socket_event_handler);
+              return true;
+            });
+  }
   multiplexer.SubscribeToEvent(
           Event(STDIN_FILENO, {Event::EventType::kInput}),
-          [this, &socket_event_handler](const Event& e) -> bool {
+          [this, &socket_event_handler, &connected_to_server](
+                  const Event& e
+          ) -> bool {
             std::string message;
             getline(std::cin, message);
             if (message == kExitMessage) {
               return false;
             } else {
               input_strings.push_back(message);
-              CheckAndUpdateSubscriptions(
-                      socket.GetSendEvent(), socket_event_handler);
+              if (connected_to_server) {
+                CheckAndUpdateSubscriptions(
+                        socket.GetSendEvent(), socket_event_handler);
+              }
               return true;
             }
           });
