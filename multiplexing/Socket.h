@@ -28,7 +28,8 @@ class Socket : public SocketScopedBase, public std::enable_shared_from_this<
   std::string ReadBytes() const;
   void TryWriteBytes(
           std::string& bytes
-  ) const;  // returns string sufix that is not sent
+  ) const; // modifies <tt>bytes</tt>. After function call there is only 
+  // unsent suffix of <tt>bytes</tt> left
   Event GetReceiveEvent();
   Event GetSendEvent();
   Event GetSendAndReceiveEvent();
