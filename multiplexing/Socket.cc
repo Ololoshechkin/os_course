@@ -90,6 +90,18 @@ bool Socket::Connect() {
   return true;
 }
 
+bool Socket::CheckSocket() {
+  int result;
+  socklen_t result_len = sizeof(result);
+  if (getsockopt(socket_fd, SOL_SOCKET, SO_ERROR, &result, &result_len) < 0) {
+    throw std::runtime_error(GetErrorMessage("failed to check socket status"));
+  } else if (result == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 Socket::~Socket() {
   std::cout << "~Socket()" << std::endl;
 }

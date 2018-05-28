@@ -25,6 +25,7 @@ class Socket : public SocketScopedBase, public std::enable_shared_from_this<
   Socket();
   explicit Socket(InetSocketAddress const& address);
   bool Connect();
+  bool CheckSocket();
   std::string ReadBytes() const;
   void TryWriteBytes(
           std::string& bytes
