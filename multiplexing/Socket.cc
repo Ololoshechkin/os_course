@@ -80,13 +80,26 @@ bool Socket::Connect() {
   const auto result = connect(
           socket_fd, (struct sockaddr*) &system_address,
           sizeof(system_address));
-  if (result == 0 || errno == EINPROGRESS) {
+  if (result == 0) {
+    return true;
+  } else if (errno == EINPROGRESS) {
     return false;
-  }
-  if (result < 0) {
+  } else if (result < 0) {
     throw std::runtime_error(GetErrorMessage("failed to connect"));
   }
   return true;
+}
+
+bool Socket::CheckSocket() {
+  int result;
+  socklen_t result_len = sizeof(result);
+  if (getsockopt(socket_fd, SOL_SOCKET, SO_ERROR, &result, &result_len) < 0) {
+    throw std::runtime_error(GetErrorMessage("failed to check socket status"));
+  } else if (result == 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 Socket::~Socket() {

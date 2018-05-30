@@ -68,6 +68,10 @@ void AsyncClient::Start() {
             [this, &connected_to_server, &socket_event_handler](
                     const Event& event
             ) -> bool {
+              if (!socket.CheckSocket()) {
+                std::cout << "failed to connect to server (socket unverified)" << std::endl;
+                return false; // return from main app loop
+              }
               connected_to_server = true;
               CheckAndUpdateSubscriptions(
                       socket.GetSendEvent(), socket_event_handler);
