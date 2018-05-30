@@ -1,3 +1,0 @@
-/os_course/IPC/build/CMakeFiles/edit_cache.dir
-/os_course/IPC/build/CMakeFiles/rebuild_cache.dir
-/os_course/IPC/build/CMakeFiles/IPC.dir
