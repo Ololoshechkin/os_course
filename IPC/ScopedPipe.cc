@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <libnet.h>
 #include <zconf.h>
 #include "ScopedPipe.h"
 #include "ExceptionHelp.h"

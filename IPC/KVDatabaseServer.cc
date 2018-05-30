@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <unordered_map>
-#include <libnet.h>
 #include <zconf.h>
 #include "KVDatabaseServer.h"
 #include "ZygoteDatabaseService.h"
