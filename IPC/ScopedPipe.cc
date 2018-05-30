@@ -13,7 +13,34 @@ ScopedPipe::ScopedPipe() {
   }
 }
 
-ScopedPipe::~ScopedPipe() = default;
+ScopedPipe::ScopedPipe(int* fd) {
+  this->fd[0] = fd[0];
+  this->fd[1] = fd[1];
+}
+
+ScopedPipe::ScopedPipe(ScopedPipe&& other) noexcept {
+  fd[0] = other.fd[0];
+  fd[1] = other.fd[1];
+}
+
+ScopedPipe::~ScopedPipe() {
+  std::string err_message;
+  for (int i = 0; i < 2; ++i) {
+    if (fd[i] > 0 && close(fd[i]) < 0) {
+      err_message += GetErrorMessage("failed to close pipe end descriptor") + "\n";
+    }  
+  }
+  if (!err_message.empty()) {
+    throw std::runtime_error(err_message);
+  }
+}
+
+ScopedPipe& ScopedPipe::operator=(ScopedPipe&& other) noexcept {
+  fd[0] = other.fd[0];
+  fd[1] = other.fd[1];
+  other.fd[0] = -1;
+  other.fd[1] = -1;
+}
 
 int ScopedPipe::FdFrom() const {
   return fd[1];
@@ -84,9 +111,4 @@ void ScopedPipe::SendBytes(const std::string& bytes) const {
     }
     offset += res;
   }
-}
-
-ScopedPipe::ScopedPipe(int* fd) {
-  this->fd[0] = fd[0];
-  this->fd[1] = fd[1];
 }

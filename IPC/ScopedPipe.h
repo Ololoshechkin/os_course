@@ -23,6 +23,9 @@ class ScopedPipe {
  public:
   ScopedPipe();
   ~ScopedPipe();
+  ScopedPipe(ScopedPipe&& other) noexcept;
+  ScopedPipe(const ScopedPipe&) = delete;
+  ScopedPipe& operator=(ScopedPipe&& other) noexcept;
   void SendBytes(const std::string& bytes) const;
   std::string ReceiveBytes(size_t count) const;
   void SendSizeT(size_t size) const;

@@ -20,7 +20,7 @@ KVDatabaseServer::KVDatabaseServer(const std::string& address) :
   zygote_socket = std::move(server_socket.Accept());
   const auto pid = fork();
   if (pid == 0) { // child(zygote) code
-    auto zygote_service = ZygoteDatabaseService(
+    ZygoteDatabaseService zygote_service(
             std::move(zygote_side_client_socket));
     zygote_service.Run();
   } else if (pid < 0) { // error

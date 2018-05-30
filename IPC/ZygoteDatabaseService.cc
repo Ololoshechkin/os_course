@@ -2,6 +2,7 @@
 // Created by Vadim on 28/05/2018.
 //
 
+#include <algorithm>
 #include <iostream>
 #include <cstdlib>
 #include <unistd.h>
@@ -81,7 +82,7 @@ void ZygoteDatabaseService::ExecuteIndependentFork(
 std::string ZygoteDatabaseService::GenerateForkArrdess() const {
   auto address = KVDatabaseServer::kZygoteAddressSufix + ".fork";
   for (int i = 0; i < 25; ++i) {
-    address.push_back((char) (arc4random() % std::numeric_limits<char>::max()));
+    address.push_back((char) (rand() % std::numeric_limits<char>::max()));
   }
   address += ".sock";
   return address;

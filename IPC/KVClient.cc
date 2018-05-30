@@ -14,8 +14,8 @@ const std::string KVClient::kDisconnect = "disconnect"; // NOLINT
 KVClient::KVClient(const std::string& server_address) {
   ScopedUnixSocket socket_to_server;
   socket_to_server.Connect(server_address + ".sock");
-  receive_pipe = socket_to_server.ReceivePipe();
-  send_pipe = socket_to_server.ReceivePipe();
+  receive_pipe = std::move(socket_to_server.ReceivePipe());
+  send_pipe = std::move(socket_to_server.ReceivePipe());
 }
 
 void KVClient::Set(const std::string& key, const std::string& value) {
