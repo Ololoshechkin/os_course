@@ -13,37 +13,33 @@ const std::string KVClient::kDisconnect = "disconnect"; // NOLINT
 
 KVClient::KVClient(const std::string& server_address) {
   ScopedUnixSocket socket_to_server;
-  std::cout << "server_address = " << server_address << std::endl;
-  socket_to_server.Connect(server_address);
-  std::cout << "connected" << std::endl;
-  const auto zygote_socket = socket_to_server.ReceiveFDImage().ToUnixSocket();
-  std::cout << "zygote_socket OK" << std::endl;
-  service_socket = zygote_socket.ReceiveFDImage().ToUnixSocket();
-  std::cout << "service_socket OK" << std::endl;
+  socket_to_server.Connect(server_address + ".sock");
+  receive_pipe = socket_to_server.ReceivePipe();
+  send_pipe = socket_to_server.ReceivePipe();
 }
 
 void KVClient::Set(const std::string& key, const std::string& value) {
-  service_socket.SendMessage(kSetValue);
-  service_socket.SendMessage(key);
-  service_socket.SendMessage(value);
+  send_pipe.SendMessage(kSetValue);
+  send_pipe.SendMessage(key);
+  send_pipe.SendMessage(value);
 }
 
 std::string KVClient::Get(const std::string& key) {
-  service_socket.SendMessage(kSetValue);
-  service_socket.SendMessage(key);
-  return service_socket.ReceiveMessage();
+  send_pipe.SendMessage(kGetValue);
+  send_pipe.SendMessage(key);
+  return receive_pipe.ReceiveMessage();
 }
 
 std::vector<std::string> KVClient::GetKeys() {
-  service_socket.SendMessage(kGetKeys);
+  send_pipe.SendMessage(kGetKeys);
   std::vector<std::string> keys;
-  size_t length = service_socket.ReceiveSizeT();
+  size_t length = receive_pipe.ReceiveSizeT();
   for (size_t i = 0; i < length; ++i) {
-    keys.push_back(service_socket.ReceiveMessage());
+    keys.push_back(receive_pipe.ReceiveMessage());
   }
   return keys;
 }
 
 KVClient::~KVClient() {
-  service_socket.SendMessage(kDisconnect);
+  send_pipe.SendMessage(kDisconnect);
 }

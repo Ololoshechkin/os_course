@@ -12,12 +12,13 @@ class KVDatabaseServer {
  private:
   ScopedUnixSocket server_socket;
   std::string zygote_address;
+  ScopedUnixSocket zygote_socket;
  public:
   static const std::string kZygoteAddressSufix;
   explicit KVDatabaseServer(const std::string& address); // init database
   ~KVDatabaseServer();
   void Run();
-  void ProcessClient(const ScopedUnixSocket& client_socket);
+  void ProcessClient(ScopedUnixSocket&& client_socket);
 };
 
 #endif //IPC_MAINSERVER_H

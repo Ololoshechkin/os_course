@@ -11,4 +11,4 @@ add_executable(
         ScopedUnixSocket.cc
         ZygoteDatabaseService.cc
         ExceptionHelp.cc
-        KVClient.cc KVClient.h)
+        KVClient.cc KVClient.h ScopedPipe.cc ScopedPipe.h)

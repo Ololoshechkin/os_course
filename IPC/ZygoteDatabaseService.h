@@ -4,6 +4,8 @@
 
 #ifndef IPC_ZYGOTEDATABASESERVICE_H
 #define IPC_ZYGOTEDATABASESERVICE_H
+static const char* const kTerminate = "terminate";
+static const char* const kFork = "fork";
 
 #include <string>
 #include <unordered_map>
@@ -16,13 +18,17 @@ class ZygoteDatabaseService {
           std::string, std::string
   > database;  // global initial database 
   std::vector<std::string> database_keys;
-  ScopedUnixSocket zygote_server_socket;
+  ScopedUnixSocket main_server_client_socket;
   std::string GenerateForkArrdess() const;
  public:
-  explicit ZygoteDatabaseService(const ScopedUnixSocket& zygote_server_socket);
+  explicit ZygoteDatabaseService(
+          ScopedUnixSocket&& main_server_client_socket
+  );
   ~ZygoteDatabaseService();
   void Run();
-  void ExecuteIndependentFork(const ScopedUnixSocket& fork_server_socket);
+  void ExecuteIndependentFork(
+          ScopedPipe&& send_pipe, ScopedPipe&& receive_pipe
+  );
 };
 
 #endif //IPC_ZYGOTEDATABASESERVICE_H

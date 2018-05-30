@@ -10,7 +10,8 @@
 
 class KVClient {
  private:
-  ScopedUnixSocket service_socket;
+  ScopedPipe send_pipe;
+  ScopedPipe receive_pipe;
  public:
   static const std::string kSetValue;
   static const std::string kGetValue;
