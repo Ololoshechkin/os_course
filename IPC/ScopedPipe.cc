@@ -27,11 +27,9 @@ ScopedPipe::~ScopedPipe() {
   std::string err_message;
   for (int i = 0; i < 2; ++i) {
     if (fd[i] > 0 && close(fd[i]) < 0) {
-      err_message += GetErrorMessage("failed to close pipe end descriptor") + "\n";
-    }  
-  }
-  if (!err_message.empty()) {
-    throw std::runtime_error(err_message);
+      std::cout << GetErrorMessage("failed to close pipe end descriptor")
+                << std::endl;
+    }
   }
 }
 
@@ -40,6 +38,7 @@ ScopedPipe& ScopedPipe::operator=(ScopedPipe&& other) noexcept {
   fd[1] = other.fd[1];
   other.fd[0] = -1;
   other.fd[1] = -1;
+  return *this;
 }
 
 int ScopedPipe::FdFrom() const {
