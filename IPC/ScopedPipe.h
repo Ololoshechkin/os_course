@@ -6,6 +6,7 @@
 #define IPC_SCOPEDPIPE_H
 
 #include <string>
+#include <unistd.h>
 #include "ScopedUnixSocket.h"
 
 class ScopedUnixSocket;

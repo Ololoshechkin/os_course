@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <unistd.h>
 #include <sys/un.h>
 #include <sys/stat.h>
 #include "ScopedUnixSocket.h"

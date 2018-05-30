@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <zconf.h>
+#include <unistd.h>
 #include "ZygoteDatabaseService.h"
 #include "KVDatabaseServer.h"
 #include "ExceptionHelp.h"
