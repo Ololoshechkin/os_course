@@ -125,15 +125,15 @@ void ScopedUnixSocket::SendBytes(const std::string& bytes) const {
 }
 
 void ScopedUnixSocket::SendFileDescriptor(int fd) const {
-  char buffer[CMSG_SPACE(sizeof(fd))];
-  memset(buffer, 0, sizeof(buffer));
-  iovec io{.iov_base = (void*) "", .iov_len = 1};
+  static char buffer[CMSG_SPACE(sizeof(fd))];
   struct msghdr msg = {nullptr};
+  iovec io{.iov_base = (void*) "", .iov_len = 1};
+  struct cmsghdr* cmsg = CMSG_FIRSTHDR(&msg);
+  memset(buffer, 0, sizeof(buffer));
   msg.msg_iov = &io;
   msg.msg_iovlen = 1;
   msg.msg_control = buffer;
   msg.msg_controllen = sizeof(buffer);
-  struct cmsghdr* cmsg = CMSG_FIRSTHDR(&msg);
   cmsg->cmsg_level = SOL_SOCKET;
   cmsg->cmsg_type = SCM_RIGHTS;
   cmsg->cmsg_len = CMSG_LEN(sizeof(fd));
@@ -146,12 +146,12 @@ void ScopedUnixSocket::SendFileDescriptor(int fd) const {
 }
 
 int ScopedUnixSocket::ReceiveFileDescriptor() const {
+  static char buffer[CMSG_SPACE(sizeof(int))];
+  static char duplicate[512];
   msghdr msg = {nullptr};
-  cmsghdr* structcmsghdr;
-  char buffer[CMSG_SPACE(sizeof(int))];
-  char duplicate[512];
-  bzero(buffer, sizeof(buffer));
   iovec io = {.iov_base = &duplicate, .iov_len = sizeof(duplicate)};
+  cmsghdr* structcmsghdr = CMSG_FIRSTHDR(&msg);
+  memset(buffer, 0, sizeof(buffer));
   msg.msg_control = buffer;
   msg.msg_controllen = sizeof(buffer);
   msg.msg_iov = &io;
@@ -160,7 +160,6 @@ int ScopedUnixSocket::ReceiveFileDescriptor() const {
     throw std::runtime_error(
             GetErrorMessage("failed to receive file descriptor"));
   }
-  structcmsghdr = CMSG_FIRSTHDR(&msg);
   int received_fd;
   memcpy(&received_fd, (int*) CMSG_DATA(structcmsghdr), sizeof(int));
   return received_fd;
