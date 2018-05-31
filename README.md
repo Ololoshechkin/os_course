@@ -32,6 +32,9 @@ Features:
 
 ## HW5
 ### [Simple terminal chat.](/chat)
+Features:
+  1) multithreaded server
+  2) ProtoBuf library used for different request types
 usage :
   a) chat server <port> <host???>
   b) chat client <port> <host???>
