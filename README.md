@@ -13,7 +13,7 @@ Features:
     * Main server sends a request to Zygote
     * Zygote forks and starts it's copy with initial state
     * Copy of Zygote initializes pipes to communicate with the Client
-    * Zygote replies to the Main server with new copy's pipes
+    * Zygote replies to the Main server with the new copy's pipes
     * Main server sends the pipes to the Client via IPC mechanism
     * Client receives the pipes and interacts directly with an independent Zygote's fork
   3) By using Zygote mechanism the following advantages were achieved:
