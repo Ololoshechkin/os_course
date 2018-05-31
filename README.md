@@ -23,7 +23,7 @@ Features:
     * When Unix uses copy-on-write technique new Zygote forks start up immediately with ready-to-use initial state
 
 ## HW6
-### Non-blocking networking and multiplexing.
+### [Non-blocking networking and multiplexing.](/multiplexing)
 
 Simple hello-server asynchronously listening for new connections, reading client requests and replying to them.
 Features:
@@ -31,7 +31,7 @@ Features:
   2) async client (multiplexing keyboard IO and network communication with server)
 
 ## HW5
-### Simple terminal chat.
+### [Simple terminal chat.](/chat)
 usage :
   a) chat server <port> <host???>
   b) chat client <port> <host???>
@@ -55,14 +55,14 @@ NOTE-2: there still remains a way to send arbitrary sequence of bytes to server 
 TODO-plans: add cryptography in order to encrypt each message content. 
 
 ## HW4
-### Linkage
+### [Linkage](/linkage)
 3 types of libraries implemented:
  * static library
  * dynamic library
  * runtime-linked library
 
 ## HW3
-### Jit
+### [Jit](/jit)
 
 supports:
   * Cycle unrolling.
@@ -77,7 +77,7 @@ supporting cycles :
 Jit maps code in runtime, finds All cycles in the given code and replaces them with their body repeated N times. Supports N in [0;222].
 
 ## HW2
-### grep utility
+### [grep utility](/grep)
 
 ## HW1
-### custom shell
+### [custom shell](/shell)
