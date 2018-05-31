@@ -11,7 +11,7 @@
 #include <sys/_types/_sigset_t.h>
 
 class EventManager {
- private:
+private:
   fd_set read_fds;
   fd_set write_fds;
   fd_set error_fds;
@@ -22,15 +22,16 @@ class EventManager {
   std::map<int, std::function<void()>> fd_to_write_handler;
   std::map<int, std::function<void()>> fd_to_error_handler;
   std::map<int, std::function<void()>> signal_to_handler;
-  
- public:
+
+public:
   EventManager();
   ~EventManager();
-  void SubscribeRead(int fd, const std::function<void()>& handler);
-  void SubscribeWrite(int fd, const std::function<void()>& handler);
-  void SubscribeError(int fd, const std::function<void()>& handler);
-  void SubscribeToSignal(int signal_id, const std::function<void()>& handler);
+  void SubscribeRead(int fd, const std::function<void()> &handler);
+  void SubscribeWrite(int fd, const std::function<void()> &handler);
+  void SubscribeError(int fd, const std::function<void()> &handler);
+  void SubscribeToSignal(int signal_id, const std::function<void()> &handler);
   void Start();
+  void HandleSignals();
 };
 
-#endif //IPC_EVENTMANAGER_H
+#endif // IPC_EVENTMANAGER_H

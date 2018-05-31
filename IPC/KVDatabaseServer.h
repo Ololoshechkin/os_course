@@ -5,21 +5,22 @@
 #ifndef IPC_MAINSERVER_H
 #define IPC_MAINSERVER_H
 
-#include <string>
 #include "ScopedUnixSocket.h"
+#include <string>
 
 class KVDatabaseServer {
- private:
+private:
   ScopedUnixSocket server_socket;
   std::string zygote_address;
   ScopedUnixSocket zygote_socket;
   EventManager event_manager;
- public:
+
+public:
   static const std::string kZygoteAddressSufix;
-  explicit KVDatabaseServer(const std::string& address); // init database
+  explicit KVDatabaseServer(const std::string &address); // init database
   ~KVDatabaseServer();
   void Run();
-  void ProcessClient(ScopedUnixSocket&& client_socket);
+  void ProcessClient(ScopedUnixSocket &&client_socket);
 };
 
-#endif //IPC_MAINSERVER_H
+#endif // IPC_MAINSERVER_H
