@@ -1,5 +1,32 @@
 # os_course
 
+## HW7
+IPC (inter process communication)
+Key-value password microservice working on Unix domain socket.
+Features:
+  1) Server sends pipes (file descriptors) to client process
+  2) Zygote mechanism (https://medium.com/masters-on-mobile/the-zygote-process-a5d4fc3503db) :
+    * Main server starts up and forks to Zygote service
+    * Zygote server initializes some state
+    * Client connects to the Main server
+    * Main server sends a request to Zygote
+    * Zygote forks and starts it's copy with initial state
+    * Copy of Zygote initializes pipes to communicate with the Client
+    * Zygote replies to the Main server with new copy's pipes
+    * Main server sends the pipes to the Client via IPC mechanism
+    * Client receives the pipes and interacts directly with an independent Zygote's fork
+  3) By using Zygote mechanism the following advantages were achieved:
+    * Clients never see each other's key-value changes and never corrupt each other's data. That can be usefull when using the service for keeping passwords of different clients. 
+    When using Zygote trick it becomes more difficult to abuse any valnurabilities to see another client's personal data
+    * When Unix uses copy-on-write technique new Zygote forks start up immediately with ready-to-use initial state
+
+## HW6
+Non-blocking networking and multiplexing.
+Simple hello-server asynchronously listening for new connections, reading client requests and replying to them.
+Features:
+  1) multiplatform multiplexing implementations : epoll solution for linux, kqueue solution for mac os
+  2) async client (multiplexing keyboard IO and network communication with server)
+
 ## HW5
 Simple terminal chat.
 usage :
