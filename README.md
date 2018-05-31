@@ -1,7 +1,7 @@
 # os_course
 
 ## HW7
-### IPC (inter process communication)
+### [IPC (inter process communication)](/IPC)
 
 Key-value password microservice working on Unix domain socket.
 
