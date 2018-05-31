@@ -13,6 +13,7 @@ class KVDatabaseServer {
   ScopedUnixSocket server_socket;
   std::string zygote_address;
   ScopedUnixSocket zygote_socket;
+  EventManager event_manager;
  public:
   static const std::string kZygoteAddressSufix;
   explicit KVDatabaseServer(const std::string& address); // init database

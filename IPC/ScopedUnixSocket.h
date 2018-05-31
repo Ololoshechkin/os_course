@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include "ScopedPipe.h"
+#include "EventManager.h"
 
 class ScopedPipe;
 
@@ -20,8 +21,6 @@ class ScopedUnixSocket {
  protected:
   explicit ScopedUnixSocket(int socket_fd);
  public:
-  std::string address___todo_delete;
-  int _det_fd__todo_delete() const;
   ScopedUnixSocket();
   ScopedUnixSocket(ScopedUnixSocket&& other) noexcept;
   ScopedUnixSocket(const ScopedUnixSocket& other) = delete;
@@ -39,6 +38,15 @@ class ScopedUnixSocket {
   int ReceiveFileDescriptor() const;
   void SendPipe(const ScopedPipe& socket) const;
   ScopedPipe ReceivePipe() const;
+  void SubscribeToRead(
+          EventManager& event_manager, const std::function<void()> handler
+  );
+  void SubscribeToWrite(
+          EventManager& event_manager, const std::function<void()> handler
+  );
+  void SubscribeToError(
+          EventManager& event_manager, const std::function<void()> handler
+  );
   ~ScopedUnixSocket();
 };
 

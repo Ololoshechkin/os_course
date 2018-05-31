@@ -31,8 +31,7 @@ ScopedUnixSocket::~ScopedUnixSocket() {
 }
 
 void ScopedUnixSocket::BindAndListen(const std::string& file_system_address) {
-  address___todo_delete = file_system_address;
-  const char* file_path = (file_system_address + (char) 0).c_str();
+  const char* file_path = file_system_address.c_str();
   sockaddr_.sun_family = AF_UNIX;
   strcpy(sockaddr_.sun_path, file_path);
   struct stat stat_s{};
@@ -51,9 +50,8 @@ void ScopedUnixSocket::BindAndListen(const std::string& file_system_address) {
 }
 
 void ScopedUnixSocket::Connect(const std::string& file_system_address) {
-  address___todo_delete = file_system_address;
   sockaddr_.sun_family = AF_UNIX;
-  const char* file_path = (file_system_address + (char) 0).c_str();
+  const char* file_path = file_system_address.c_str();
   strcpy(sockaddr_.sun_path, file_path);
   if (connect(
           socket_fd, (struct sockaddr*) &sockaddr_, sizeof(sockaddr_)) < 0) {
@@ -165,10 +163,6 @@ int ScopedUnixSocket::ReceiveFileDescriptor() const {
   return received_fd;
 }
 
-int ScopedUnixSocket::_det_fd__todo_delete() const {
-  return socket_fd;
-}
-
 void ScopedUnixSocket::SendPipe(const ScopedPipe& pipe) const {
   SendFileDescriptor(pipe.fd[0]);
   SendFileDescriptor(pipe.fd[1]);
@@ -190,4 +184,22 @@ ScopedUnixSocket::operator=(ScopedUnixSocket&& other) noexcept {
   sockaddr_ = other.sockaddr_;
   other.socket_fd = -1;
   return *this;
+}
+
+void ScopedUnixSocket::SubscribeToRead(
+        EventManager& event_manager, const std::function<void()> handler
+) {
+  event_manager.SubscribeRead(socket_fd, handler);
+}
+
+void ScopedUnixSocket::SubscribeToWrite(
+        EventManager& event_manager, const std::function<void()> handler
+) {
+  event_manager.SubscribeWrite(socket_fd, handler);
+}
+
+void ScopedUnixSocket::SubscribeToError(
+        EventManager& event_manager, const std::function<void()> handler
+) {
+  event_manager.SubscribeError(socket_fd, handler);
 }

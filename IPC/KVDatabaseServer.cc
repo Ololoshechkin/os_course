@@ -30,10 +30,18 @@ KVDatabaseServer::KVDatabaseServer(const std::string& address) :
 }
 
 void KVDatabaseServer::Run() {
-  while (true) {
-    auto client_socket = server_socket.Accept();
-    ProcessClient(std::move(client_socket));
-  }
+  event_manager.SubscribeToSignal(
+          SIGINT, [this] {
+            std::cout << std::endl << "exit" << std::endl;
+            this->~KVDatabaseServer();
+            exit(0);
+          });
+  server_socket.SubscribeToRead(
+          event_manager, [this] {
+            auto client_socket = server_socket.Accept();
+            ProcessClient(std::move(client_socket));
+          });
+  event_manager.Start();
 }
 
 void KVDatabaseServer::ProcessClient(

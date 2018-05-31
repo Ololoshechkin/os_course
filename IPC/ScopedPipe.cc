@@ -25,8 +25,8 @@ ScopedPipe::ScopedPipe(ScopedPipe&& other) noexcept {
 
 ScopedPipe::~ScopedPipe() {
   std::string err_message;
-  for (int i = 0; i < 2; ++i) {
-    if (fd[i] > 0 && close(fd[i]) < 0) {
+  for (int fd_i : fd) {
+    if (fd_i > 0 && close(fd_i) < 0) {
       std::cout << GetErrorMessage("failed to close pipe end descriptor")
                 << std::endl;
     }
