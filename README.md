@@ -38,9 +38,9 @@ Features:
   
 usage :
 
-  a) chat server <port> <host???>
+  a) chat server (port) (host?)
   
-  b) chat client <port> <host???>
+  b) chat client (port) (host?)
   
 If not specified host equals 127.0.0.1
   
