@@ -51,6 +51,13 @@ NOTE-2: there still remains a way to send arbitrary sequence of bytes to server 
 
 TODO-plans: add cryptography in order to encrypt each message content. 
 
+## HW4
+Linkage
+3 types of libraries implemented:
+ * static library
+ * dynamic library
+ * runtime-linked library
+
 ## HW3
 Jit
 
