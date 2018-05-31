@@ -77,7 +77,7 @@ supporting cycles :
 Jit maps code in runtime, finds All cycles in the given code and replaces them with their body repeated N times. Supports N in [0;222].
 
 ## HW2
-### [grep utility](/grep)
+### [grep utility](/Grep)
 
 ## HW1
 ### [custom shell](/shell)
