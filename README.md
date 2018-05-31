@@ -3,6 +3,7 @@
 ## HW7
 IPC (inter process communication)
 Key-value password microservice working on Unix domain socket.
+
 Features:
   1) Server sends pipes (file descriptors) to client process
   2) Zygote mechanism (https://medium.com/masters-on-mobile/the-zygote-process-a5d4fc3503db) :
