@@ -37,8 +37,11 @@ Features:
   2) ProtoBuf library used for different request types
   
 usage :
+
   a) chat server <port> <host???>
+  
   b) chat client <port> <host???>
+  
 If not specified host equals 127.0.0.1
   
 client comands
