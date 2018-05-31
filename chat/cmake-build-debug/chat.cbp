@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="chat"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="chat">
+				<Option output="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/chat" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 chat"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="chat/fast">
+				<Option output="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/chat" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 chat/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/InetSocketAddress.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/InetSocketAddress.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/InetUtils.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/InetUtils.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/MessageClient.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/MessageServer.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/MessageServer.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/MessageUtils.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/MessageUtils.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/ServerSocket.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/ServerSocket.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/Socket.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/Socket.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/SocketScopedBase.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/SocketScopedBase.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/message.pb.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/message.pb.cc.rule">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/message.pb.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/session.pb.cc">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/session.pb.cc.rule">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/cmake-build-debug/session.pb.h">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/main.cpp">
+			<Option target="chat"/>
+		</Unit>
+		<Unit filename="/Users/Vadim/Documents/OS_course/hw5_client_server/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
