@@ -35,6 +35,7 @@ Features:
 Features:
   1) multithreaded server
   2) ProtoBuf library used for different request types
+  
 usage :
   a) chat server <port> <host???>
   b) chat client <port> <host???>
